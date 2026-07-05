@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-bg-sidebar: #2d2d44;
+  --color-bg-main: #f5f5f7;
+  --color-bg-input: #ffffff;
+  --color-bg-hover: #3d3d5c;
+  --color-bg-message-user: #3b82f6;
+  --color-bg-message-ai: #e8eaed;
+
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-light: #ffffff;
+  --color-text-muted: #9ca3af;
+
+  --color-accent-blue: #3b82f6;
+  --color-accent-blue-light: #60a5fa;
+  --color-border-light: #e5e7eb;
+  --color-border-dark: #374151;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg-main);
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  overflow: hidden;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
