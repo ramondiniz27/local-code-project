@@ -1,37 +1,54 @@
 import { MessageSquare } from "lucide-react";
-import { conversations } from "../../data/mockData";
+import { formatRelativeTime } from "../../lib/time";
+import type { StoredChat } from "../../lib/chatStorage";
 
-export function ConversationList() {
+interface ConversationListProps {
+  chats: StoredChat[];
+  activeChatId: string | null;
+  onSelect: (id: string) => void;
+  disabled: boolean;
+}
+
+export function ConversationList({
+  chats,
+  activeChatId,
+  onSelect,
+  disabled,
+}: ConversationListProps) {
   return (
     <div className="flex flex-col gap-0.5">
-      {conversations.map((conversation) => (
-        <div
-          key={conversation.id}
-          className={`flex items-center gap-2.5 rounded-radius-sm px-3 py-2.5 ${
-            conversation.active ? "bg-bg-hover" : ""
-          }`}
-        >
-          <MessageSquare
-            className={`h-[18px] w-[18px] shrink-0 ${
-              conversation.active ? "text-accent-blue-light" : "text-text-muted"
+      {chats.map((chat) => {
+        const active = chat.id === activeChatId;
+        return (
+          <button
+            key={chat.id}
+            type="button"
+            disabled={disabled}
+            onClick={() => onSelect(chat.id)}
+            className={`flex items-center gap-2.5 rounded-radius-sm px-3 py-2.5 text-left disabled:cursor-not-allowed ${
+              active ? "bg-bg-hover" : ""
             }`}
-          />
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span
-              className={`truncate text-[13px] ${
-                conversation.active
-                  ? "font-medium text-text-light"
-                  : "text-[#b0b0c8]"
+          >
+            <MessageSquare
+              className={`h-[18px] w-[18px] shrink-0 ${
+                active ? "text-accent-blue-light" : "text-text-muted"
               }`}
-            >
-              {conversation.title}
-            </span>
-            <span className="text-[11px] text-text-muted">
-              {conversation.time}
-            </span>
-          </div>
-        </div>
-      ))}
+            />
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span
+                className={`truncate text-[13px] ${
+                  active ? "font-medium text-text-light" : "text-[#b0b0c8]"
+                }`}
+              >
+                {chat.title}
+              </span>
+              <span className="text-[11px] text-text-muted">
+                {formatRelativeTime(chat.updatedAt)}
+              </span>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
