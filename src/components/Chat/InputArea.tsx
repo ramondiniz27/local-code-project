@@ -1,5 +1,6 @@
 import { useState, type KeyboardEvent } from "react";
 import { ArrowUp, Mic, Paperclip } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface InputAreaProps {
   onSend: (text: string) => void;
@@ -36,15 +37,16 @@ export function InputArea({ onSend, disabled }: InputAreaProps) {
         />
         <div className="flex items-center gap-2">
           <Mic className="h-5 w-5 text-text-muted" />
-          <button
+          <Button
             type="button"
+            size="icon"
             onClick={handleSend}
             disabled={disabled || !value.trim()}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-blue disabled:opacity-50"
+            className="h-8 w-8 rounded-full bg-accent-blue hover:bg-accent-blue/90 disabled:opacity-50"
             aria-label="Send message"
           >
             <ArrowUp className="h-4 w-4 text-text-light" />
-          </button>
+          </Button>
         </div>
       </div>
       <p className="text-center text-[11px] text-text-muted">
