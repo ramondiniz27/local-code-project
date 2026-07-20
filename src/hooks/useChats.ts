@@ -67,9 +67,13 @@ export function useChats(url: string) {
       if (activeChatId === null) {
         setDraftModel(model);
       } else {
-        setChats((prev) =>
-          prev.map((chat) => (chat.id === activeChatId ? { ...chat, model } : chat)),
-        );
+        setChats((prev) => {
+          const next = prev.map((chat) =>
+            chat.id === activeChatId ? { ...chat, model } : chat,
+          );
+          persistChats(next);
+          return next;
+        });
       }
       selectModel(url, model).catch((err) => setError(String(err)));
     },
