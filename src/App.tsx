@@ -1,11 +1,12 @@
-import { useState } from "react";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { MainChatArea } from "./components/Chat/MainChatArea";
 import { SetupScreen } from "./components/SetupScreen";
 import { useChats } from "./hooks/useChats";
+import { useSettingsStore } from "./store/settingsStore";
 
 function App() {
-  const [ollamaUrl, setOllamaUrl] = useState(() => localStorage.getItem("ollamaUrl"));
+  const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
+  const setOllamaUrl = useSettingsStore((s) => s.setOllamaUrl);
 
   if (!ollamaUrl) {
     return <SetupScreen onSave={setOllamaUrl} />;
