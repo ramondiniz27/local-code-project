@@ -13,21 +13,31 @@ import {
   MAX_VISIBLE_CHATS,
   type StoredChat,
 } from "../lib/chatStorage";
+import { useSettingsStore } from "../store/settingsStore";
 
 export function useChats(url: string) {
   const [chats, setChats] = useState<StoredChat[]>(() => loadChats());
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [models, setModels] = useState<OllamaModel[]>([]);
+  const [rawModels, setRawModels] = useState<OllamaModel[]>([]);
   const [draftModel, setDraftModel] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const streamingChatIdRef = useRef<string | null>(null);
+  const modelPreferences = useSettingsStore((s) => s.modelPreferences);
+
+  const models = useMemo(
+    () => rawModels.filter((model) => modelPreferences[model.name] ?? true),
+    [rawModels, modelPreferences],
+  );
 
   useEffect(() => {
     listModels(url)
       .then((list) => {
-        setModels(list);
-        const initial = list[0]?.name ?? "";
+        setRawModels(list);
+        const visible = list.filter(
+          (model) => modelPreferences[model.name] ?? true,
+        );
+        const initial = visible[0]?.name ?? "";
         if (initial) {
           setDraftModel(initial);
           selectModel(url, initial).catch((err) => setError(String(err)));
