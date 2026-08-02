@@ -33,6 +33,7 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
     error,
     startNewChat,
     selectChat,
+    deleteChat,
     setSelectedModel,
     sendMessage,
   } = useChats(ollamaUrl);
@@ -58,6 +59,7 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
           setActiveTab("chat");
           selectChat(id);
         }}
+        onDeleteChat={deleteChat}
         onNewChat={handleNewChat}
         isStreaming={isStreaming}
         activeTab={activeTab}

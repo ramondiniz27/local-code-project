@@ -18,33 +18,64 @@ import { useSettingsStore } from "../store/settingsStore";
 export function useChats(url: string) {
   const [chats, setChats] = useState<StoredChat[]>(() => loadChats());
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [rawModels, setRawModels] = useState<OllamaModel[]>([]);
-  const [draftModel, setDraftModel] = useState("");
+  const lastKnownModels = useSettingsStore((s) => s.lastKnownModels);
+  const setLastKnownModels = useSettingsStore((s) => s.setLastKnownModels);
+  const modelPreferences = useSettingsStore((s) => s.modelPreferences);
+
+  const [rawModels, setRawModels] = useState<OllamaModel[]>(() => lastKnownModels);
+  const [draftModel, setDraftModel] = useState<string>(() => {
+    const visible = lastKnownModels.filter(
+      (m) => modelPreferences[m.name] ?? true,
+    );
+    return visible[0]?.name ?? "";
+  });
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const streamingChatIdRef = useRef<string | null>(null);
-  const modelPreferences = useSettingsStore((s) => s.modelPreferences);
 
   const models = useMemo(
     () => rawModels.filter((model) => modelPreferences[model.name] ?? true),
     [rawModels, modelPreferences],
   );
 
-  useEffect(() => {
-    listModels(url)
-      .then((list) => {
-        setRawModels(list);
-        const visible = list.filter(
-          (model) => modelPreferences[model.name] ?? true,
-        );
-        const initial = visible[0]?.name ?? "";
-        if (initial) {
-          setDraftModel(initial);
-          selectModel(url, initial).catch((err) => setError(String(err)));
+  const refreshModels = useCallback(async () => {
+    try {
+      const list = await listModels(url);
+      setRawModels(list);
+      setLastKnownModels(list);
+      const visible = list.filter(
+        (model) => modelPreferences[model.name] ?? true,
+      );
+      const initial = visible[0]?.name ?? "";
+
+      setDraftModel((prev) => {
+        if (prev && visible.some((m) => m.name === prev)) {
+          return prev;
         }
-      })
-      .catch((err) => setError(String(err)));
-  }, [url]);
+        return initial;
+      });
+
+      if (initial) {
+        selectModel(url, initial).catch((err) => setError(String(err)));
+      }
+    } catch (err) {
+      setError(String(err));
+    }
+  }, [url, modelPreferences, setLastKnownModels]);
+
+  useEffect(() => {
+    const initialModel = draftModel || rawModels[0]?.name;
+    if (url && initialModel) {
+      selectModel(url, initialModel).catch(() => {});
+    }
+    refreshModels();
+
+    const timer = setInterval(() => {
+      refreshModels();
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [url, refreshModels]);
 
   const visibleChats = useMemo(
     () => [...chats].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_VISIBLE_CHATS),
@@ -59,10 +90,45 @@ export function useChats(url: string) {
   const messages = activeChat?.messages ?? [];
   const selectedModel = activeChat?.model ?? draftModel;
 
+  const pendingChunkBufferRef = useRef<string>("");
+  const rafIdRef = useRef<number | null>(null);
+
+  const flushChunkBuffer = useCallback(() => {
+    const chunkToAppend = pendingChunkBufferRef.current;
+    if (!chunkToAppend) return;
+    pendingChunkBufferRef.current = "";
+
+    const id = streamingChatIdRef.current;
+    if (id === null) return;
+
+    setChats((prev) =>
+      prev.map((chat) => {
+        if (chat.id !== id) return chat;
+        const messages = [...chat.messages];
+        const lastIndex = messages.length - 1;
+        messages[lastIndex] = {
+          ...messages[lastIndex],
+          content: messages[lastIndex].content + chunkToAppend,
+        };
+        return { ...chat, messages };
+      }),
+    );
+  }, []);
+
+  const scheduleFlush = useCallback(() => {
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        flushChunkBuffer();
+      });
+    }
+  }, [flushChunkBuffer]);
+
   const startNewChat = useCallback(() => {
     if (isStreaming) return;
     setActiveChatId(null);
-  }, [isStreaming]);
+    refreshModels().catch(() => {});
+  }, [isStreaming, refreshModels]);
 
   const selectChat = useCallback(
     (id: string) => {
@@ -139,6 +205,8 @@ export function useChats(url: string) {
 
       const targetId = chatId;
       streamingChatIdRef.current = targetId;
+      pendingChunkBufferRef.current = "";
+
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === targetId
@@ -150,24 +218,17 @@ export function useChats(url: string) {
 
       try {
         await streamChat(historyForApi, (chunk) => {
-          const id = streamingChatIdRef.current;
-          if (id === null) return;
-          setChats((prev) =>
-            prev.map((chat) => {
-              if (chat.id !== id) return chat;
-              const messages = [...chat.messages];
-              const lastIndex = messages.length - 1;
-              messages[lastIndex] = {
-                ...messages[lastIndex],
-                content: messages[lastIndex].content + chunk,
-              };
-              return { ...chat, messages };
-            }),
-          );
+          pendingChunkBufferRef.current += chunk;
+          scheduleFlush();
         });
       } catch (err) {
         setError(String(err));
       } finally {
+        if (rafIdRef.current !== null) {
+          cancelAnimationFrame(rafIdRef.current);
+          rafIdRef.current = null;
+        }
+        flushChunkBuffer();
         setIsStreaming(false);
         streamingChatIdRef.current = null;
         setChats((prev) => {
@@ -176,7 +237,22 @@ export function useChats(url: string) {
         });
       }
     },
-    [activeChatId, chats, draftModel, isStreaming, selectedModel],
+    [activeChatId, chats, draftModel, flushChunkBuffer, isStreaming, scheduleFlush, selectedModel],
+  );
+
+  const deleteChat = useCallback(
+    (id: string) => {
+      if (isStreaming) return;
+      setChats((prev) => {
+        const next = prev.filter((chat) => chat.id !== id);
+        persistChats(next);
+        return next;
+      });
+      if (activeChatId === id) {
+        setActiveChatId(null);
+      }
+    },
+    [activeChatId, isStreaming],
   );
 
   return {
@@ -189,6 +265,7 @@ export function useChats(url: string) {
     error,
     startNewChat,
     selectChat,
+    deleteChat,
     setSelectedModel,
     sendMessage,
   };
