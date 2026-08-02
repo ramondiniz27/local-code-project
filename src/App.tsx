@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { Sidebar } from "./components/Sidebar/Sidebar";
+import type { TabType } from "./components/Sidebar/TabsRow";
 import { MainChatArea } from "./components/Chat/MainChatArea";
+import { CoworkArea } from "./components/Cowork/CoworkArea";
+import { CodeArea } from "./components/Code/CodeArea";
 import { SetupScreen } from "./components/SetupScreen";
 import { useChats } from "./hooks/useChats";
 import { useSettingsStore } from "./store/settingsStore";
+import { useOllamaErrorToast } from "./hooks/useOllamaErrorToast";
 
 function App() {
   const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
@@ -16,6 +21,8 @@ function App() {
 }
 
 function Connected({ ollamaUrl }: { ollamaUrl: string }) {
+  const [activeTab, setActiveTab] = useState<TabType>("chat");
+
   const {
     chats,
     activeChatId,
@@ -30,24 +37,48 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
     sendMessage,
   } = useChats(ollamaUrl);
 
+  // Show a toast whenever Ollama is unreachable (deduped, auto-dismissed on recovery)
+  useOllamaErrorToast(models.length === 0 ? error : null, ollamaUrl);
+
+  const handleSelectTab = (tab: TabType) => {
+    setActiveTab(tab);
+  };
+
+  const handleNewChat = () => {
+    setActiveTab("chat");
+    startNewChat();
+  };
+
   return (
     <div className="flex h-full w-full overflow-hidden">
       <Sidebar
         chats={chats}
         activeChatId={activeChatId}
-        onSelectChat={selectChat}
-        onNewChat={startNewChat}
+        onSelectChat={(id) => {
+          setActiveTab("chat");
+          selectChat(id);
+        }}
+        onNewChat={handleNewChat}
         isStreaming={isStreaming}
+        activeTab={activeTab}
+        onSelectTab={handleSelectTab}
       />
-      <MainChatArea
-        messages={messages}
-        models={models}
-        selectedModel={selectedModel}
-        isStreaming={isStreaming}
-        error={error}
-        onSelectModel={setSelectedModel}
-        onSend={sendMessage}
-      />
+
+      {activeTab === "chat" && (
+        <MainChatArea
+          messages={messages}
+          models={models}
+          selectedModel={selectedModel}
+          isStreaming={isStreaming}
+          error={error}
+          onSelectModel={setSelectedModel}
+          onSend={sendMessage}
+        />
+      )}
+
+      {activeTab === "cowork" && <CoworkArea />}
+
+      {activeTab === "code" && <CodeArea />}
     </div>
   );
 }
