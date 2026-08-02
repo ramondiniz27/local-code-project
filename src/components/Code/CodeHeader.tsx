@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { GitBranch, Sparkles, ChevronDown, GitCommitHorizontal, FolderGit2, AlertCircle } from "lucide-react";
+import { GitBranch, Sparkles, ChevronDown, GitCommitHorizontal, FolderGit2, AlertCircle, FolderOpen } from "lucide-react";
 import { useModels } from "../../hooks/useModels";
 import { useOllamaErrorToast } from "../../hooks/useOllamaErrorToast";
 import { useSettingsStore } from "../../store/settingsStore";
+import { useCodeStore } from "../../store/codeStore";
 
 interface CodeHeaderProps {
   onCommit?: () => void;
@@ -14,7 +15,9 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
   const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Show a toast when Ollama is unreachable (deduped; CodeHeader polls independently)
+  const { projectName, branchName, changedFiles, openProject } = useCodeStore();
+
+  // Show a toast when Ollama is unreachable
   useOllamaErrorToast(models.length === 0 ? error : null, ollamaUrl);
 
   const handleModelChange = (modelName: string) => {
@@ -28,18 +31,29 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
       {/* Left side: Repo, Branch, Diff Stat */}
       <div className="flex items-center gap-3">
         {/* Repo Chip */}
-        <div className="flex items-center gap-1.5 rounded-md bg-[#2a2a42] px-2.5 py-1 text-xs font-medium text-white shadow-xs">
+        <button
+          type="button"
+          onClick={() => openProject()}
+          className="flex items-center gap-1.5 rounded-md bg-[#2a2a42] px-2.5 py-1 text-xs font-medium text-white shadow-xs hover:bg-[#343452] transition-colors cursor-pointer"
+          title="Clique para abrir ou alterar o projeto"
+        >
           <FolderGit2 className="h-3.5 w-3.5 text-[#60a5fa]" />
-          <span>—</span>
-        </div>
+          <span className="font-mono">{projectName !== "—" ? projectName : "Abrir Projeto..."}</span>
+          <FolderOpen className="h-3 w-3 text-[#9ca3af] ml-0.5" />
+        </button>
 
         {/* Branch Chip */}
-        <div className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#9ca3af]">
+        <div className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#9ca3af] border border-[#2d2d48]">
           <GitBranch className="h-3.5 w-3.5 text-[#9ca3af]" />
-          <span className="font-mono">—</span>
+          <span className="font-mono">{branchName}</span>
         </div>
 
-
+        {/* Diff Stat */}
+        {changedFiles.length > 0 && (
+          <div className="flex items-center gap-1.5 font-mono text-xs font-semibold">
+            <span className="text-[#98c379]">+{changedFiles.length}</span>
+          </div>
+        )}
       </div>
 
       {/* Right side: Model Dropdown & Commit Button */}
@@ -49,7 +63,7 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
           <button
             type="button"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2 rounded-md bg-[#2a2a42] px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#343452] focus:outline-none"
+            className="flex items-center gap-2 rounded-md bg-[#2a2a42] px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#343452] focus:outline-none cursor-pointer"
           >
             {isConnected ? (
               <Sparkles className="h-3.5 w-3.5 text-[#60a5fa]" />
@@ -104,7 +118,7 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
         <button
           type="button"
           onClick={onCommit}
-          className="flex items-center gap-1.5 rounded-lg bg-[#3b82f6] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#2563eb] active:scale-95"
+          className="flex items-center gap-1.5 rounded-lg bg-[#3b82f6] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#2563eb] active:scale-95 cursor-pointer"
         >
           <GitCommitHorizontal className="h-4 w-4" />
           <span>Commit</span>
