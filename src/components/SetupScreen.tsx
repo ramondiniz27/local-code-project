@@ -7,17 +7,22 @@ interface SetupScreenProps {
 }
 
 export function SetupScreen({ onSave }: SetupScreenProps) {
-  const [url, setUrl] = useState("http://localhost:11434");
+  const [url, setUrl] = useState("");
   const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<"success" | "error" | null>(
+  const [testResult, setTestResult] = useState<"success" | "error" | "empty" | null>(
     null,
   );
 
   async function handleTest() {
+    const trimmed = url.trim();
+    if (!trimmed) {
+      setTestResult("empty");
+      return;
+    }
     setTesting(true);
     setTestResult(null);
     try {
-      await testConnection(url);
+      await testConnection(trimmed);
       setTestResult("success");
     } catch {
       setTestResult("error");
@@ -27,8 +32,13 @@ export function SetupScreen({ onSave }: SetupScreenProps) {
   }
 
   function handleSave() {
-    localStorage.setItem("ollamaUrl", url);
-    onSave(url);
+    const trimmed = url.trim();
+    if (!trimmed) {
+      setTestResult("empty");
+      return;
+    }
+    localStorage.setItem("ollamaUrl", trimmed);
+    onSave(trimmed);
   }
 
   return (
@@ -67,6 +77,11 @@ export function SetupScreen({ onSave }: SetupScreenProps) {
               className="flex-1 border-none bg-transparent text-[14px] text-[#1f2937] outline-none placeholder:text-[#9ca3af]"
             />
           </div>
+          {testResult === "empty" && (
+            <p className="text-[13px] text-amber-500">
+              Por favor, informe a URL do seu servidor Ollama (ex: http://localhost:11434)
+            </p>
+          )}
           {testResult === "success" && (
             <p className="text-[13px] text-green-600">
               ✓ Conexão estabelecida com sucesso

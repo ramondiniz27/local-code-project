@@ -20,22 +20,30 @@
 
   <style>
     :root {
-      --bg-dark: #07080d;
-      --bg-card: rgba(14, 17, 27, 0.75);
-      --bg-card-hover: rgba(22, 27, 43, 0.9);
+      --bg-dark: #090a10;
+      --bg-card: rgba(18, 22, 35, 0.75);
+      --bg-card-hover: rgba(26, 32, 50, 0.9);
       --border-color: rgba(255, 255, 255, 0.08);
       --border-accent: rgba(99, 102, 241, 0.4);
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --primary-glow: rgba(99, 102, 241, 0.35);
-      --accent: #8b5cf6;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-glow: rgba(59, 130, 246, 0.35);
+      --accent-purple: #8b5cf6;
       --cyan: #06b6d4;
-      --cyan-glow: rgba(6, 182, 212, 0.25);
       --green: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.25);
       --amber: #f59e0b;
+      --red: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      
+      /* Real App Color Palette */
+      --app-sidebar-bg: #2d2d44;
+      --app-sidebar-hover: #3d3d5c;
+      --app-blue: #3b82f6;
+      --app-blue-light: #60a5fa;
+      --app-chat-bg: #f5f5f7;
+      --app-code-bg: #0f111a;
+      
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -57,9 +65,9 @@
       line-height: 1.6;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
-        radial-gradient(circle at 80% 40%, rgba(139, 92, 246, 0.13) 0%, transparent 50%),
-        radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.09) 0%, transparent 55%);
+        radial-gradient(circle at 20% 12%, rgba(59, 130, 246, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 80% 35%, rgba(139, 92, 246, 0.14) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 55%);
       background-attachment: fixed;
     }
 
@@ -76,7 +84,7 @@
       z-index: 100;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      background: rgba(7, 8, 13, 0.85);
+      background: rgba(9, 10, 16, 0.85);
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -99,7 +107,7 @@
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -115,13 +123,13 @@
     }
 
     .logo-text {
-      font-weight: 700;
-      font-size: 1.25rem;
+      font-weight: 800;
+      font-size: 1.3rem;
       letter-spacing: -0.02em;
     }
 
-    .logo-text span {
-      color: #818cf8;
+    .logo-text .blue {
+      color: var(--primary);
     }
 
     .nav-links {
@@ -141,12 +149,6 @@
 
     .nav-links a:hover {
       color: var(--text-main);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
     }
 
     .btn-github {
@@ -172,7 +174,7 @@
 
     /* Hero Section */
     .hero {
-      padding: 90px 0 60px;
+      padding: 80px 0 60px;
       text-align: center;
     }
 
@@ -182,26 +184,20 @@
       gap: 8px;
       padding: 6px 16px;
       border-radius: 999px;
-      background: rgba(99, 102, 241, 0.12);
-      border: 1px solid rgba(99, 102, 241, 0.35);
-      color: #a5b4fc;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
       font-size: 0.85rem;
       font-weight: 600;
       margin-bottom: 24px;
-      animation: pulse-glow 3s infinite;
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2); }
-      50% { box-shadow: 0 0 16px 2px rgba(99, 102, 241, 0.35); }
     }
 
     .pill-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 10px #10b981;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
     }
 
     .hero-title {
@@ -216,7 +212,7 @@
     }
 
     .hero-title .gradient-text {
-      background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #38bdf8 100%);
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #38bdf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -235,7 +231,7 @@
       align-items: center;
       justify-content: center;
       gap: 16px;
-      margin-bottom: 50px;
+      margin-bottom: 45px;
     }
 
     .hero-buttons-row {
@@ -252,18 +248,18 @@
       gap: 10px;
       padding: 14px 30px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
       color: #ffffff;
       font-weight: 600;
       font-size: 1.05rem;
       text-decoration: none;
       box-shadow: 0 4px 24px var(--primary-glow);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.55);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.55);
     }
 
     .btn-secondary {
@@ -294,572 +290,717 @@
       color: var(--cyan);
     }
 
-    /* Interactive Desktop Application Preview Window */
+    /* REAL APP SIMULATOR WINDOW */
     .app-preview-wrapper {
-      max-width: 1080px;
+      max-width: 1040px;
       margin: 0 auto;
-      perspective: 1200px;
     }
 
     .app-preview-window {
-      border-radius: 16px;
-      border: 1px solid var(--border-accent);
-      background: #0d101b;
-      box-shadow: 0 28px 70px -12px rgba(0, 0, 0, 0.85), 0 0 50px rgba(99, 102, 241, 0.22);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #1e1e2f;
+      box-shadow: 0 28px 70px -12px rgba(0, 0, 0, 0.85), 0 0 50px rgba(59, 130, 246, 0.2);
       overflow: hidden;
       text-align: left;
     }
 
-    /* Window Header */
-    .window-header {
-      height: 48px;
-      background: rgba(18, 22, 35, 0.95);
-      border-bottom: 1px solid var(--border-color);
+    /* macOS Window Bar */
+    .app-mac-header {
+      height: 40px;
+      background: #1a1a2e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       padding: 0 16px;
       gap: 14px;
+      user-select: none;
     }
 
-    .window-controls {
+    .mac-dots {
       display: flex;
       gap: 8px;
     }
 
-    .control-dot {
+    .mac-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
     }
-    .control-dot.close { background: #ef4444; }
-    .control-dot.min { background: #f59e0b; }
-    .control-dot.max { background: #10b981; }
+    .mac-dot.red { background: #ef4444; }
+    .mac-dot.yellow { background: #f59e0b; }
+    .mac-dot.green { background: #10b981; }
 
-    .window-title {
+    .mac-title {
       font-size: 0.82rem;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .app-screen-tabs {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .window-status-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 8px;
-      border-radius: 6px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #34d399;
-      font-size: 0.72rem;
-    }
-
-    .status-dot-pulse {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10b981;
-    }
-
-    .simulator-nav-tabs {
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      gap: 6px;
       margin-left: auto;
       background: rgba(0, 0, 0, 0.35);
-      padding: 4px;
-      border-radius: 9px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 3px 6px;
+      border-radius: 8px;
     }
 
-    .sim-tab-btn {
-      padding: 5px 14px;
-      font-size: 0.8rem;
+    .app-tab-btn {
+      padding: 4px 12px;
+      font-size: 0.78rem;
       border-radius: 6px;
-      color: var(--text-muted);
+      color: #94a3b8;
       cursor: pointer;
       border: none;
       background: transparent;
       font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
-    .sim-tab-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .sim-tab-btn.active {
+    .app-tab-btn.active {
       background: var(--primary);
       color: #ffffff;
       font-weight: 600;
-      box-shadow: 0 2px 8px var(--primary-glow);
     }
 
-    /* Screen Views */
-    .screen-view {
-      display: none;
-      min-height: 520px;
-    }
-
-    .screen-view.active {
+    /* Real App Body Layout */
+    .real-app-layout {
       display: grid;
-    }
-
-    /* SCREEN 1: CHAT VIEW */
-    #view-chat {
       grid-template-columns: 240px 1fr;
+      min-height: 520px;
+      background: #f5f5f7;
+      position: relative;
     }
 
-    .sim-sidebar {
-      background: #090c14;
-      border-right: 1px solid var(--border-color);
+    /* Left Sidebar (Matches Exact App Sidebar) */
+    .real-sidebar {
+      background: var(--app-sidebar-bg);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
       padding: 16px 12px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .sim-new-chat-btn {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid var(--border-accent);
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+    }
+
+    .sidebar-brand-logo {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .sidebar-brand-logo .b1 { color: #3b82f6; }
+    .sidebar-brand-logo .b2 { color: #ffffff; }
+
+    .sidebar-add-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: none;
       color: #ffffff;
-      font-size: 0.84rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .sidebar-tabs-pill {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .sidebar-pill-item {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      font-size: 0.74rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 4px;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-    .sim-new-chat-btn:hover {
-      background: rgba(99, 102, 241, 0.25);
     }
 
-    .sidebar-section-title {
+    .sidebar-pill-item.active {
+      background: var(--app-sidebar-hover);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-search-box {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #9ca3af;
+      font-size: 0.78rem;
+    }
+
+    /* SCREEN 1: REAL CHAT VIEW */
+    .screen-container {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .screen-container.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #screen-chat {
+      background: #f5f5f7;
+      justify-content: space-between;
+    }
+
+    .chat-top-header {
+      height: 48px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .dropdown-btn-model {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .gear-btn {
+      color: #6b7280;
+      cursor: pointer;
+    }
+
+    .chat-empty-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 0.92rem;
+    }
+
+    .chat-input-area {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-input-card {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .chat-input-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+
+    .chat-input-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .send-arrow-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .chat-input-disclaimer {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    /* SCREEN 2: REAL CODE WORKSPACE VIEW */
+    #screen-code {
+      background: #0f111a;
+      display: flex;
+      flex-direction: column;
+      color: #f8fafc;
+    }
+
+    .code-top-header {
+      height: 48px;
+      background: #141724;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .code-proj-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: #cbd5e1;
+    }
+
+    .code-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .warning-model-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .commit-btn {
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .code-3col-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 200px 1fr 220px;
+      position: relative;
+    }
+
+    .code-col-explorer {
+      background: #121522;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .col-title {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: #64748b;
       font-weight: 700;
-      padding-left: 6px;
+      margin-bottom: 12px;
     }
 
-    .sim-chat-list {
+    .btn-open-folder {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .code-col-center {
+      background: #0f111a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .center-state-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      margin-bottom: 16px;
+    }
+
+    .center-state-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+
+    .center-state-desc {
+      font-size: 0.82rem;
+      color: #64748b;
+      max-width: 320px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-center-action {
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .code-col-assistant {
+      background: #121522;
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .toast-alert-ollama {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background: #ffffff;
+      color: #1f2937;
+      padding: 12px 16px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      max-width: 320px;
+      font-size: 0.78rem;
+    }
+
+    /* SCREEN 3: REAL COWORK VIEW */
+    #screen-cowork {
+      background: #f8fafc;
+      color: #1f2937;
+    }
+
+    .cowork-top-header {
+      height: 52px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .cowork-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cowork-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .badge-awaiting {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .input-cowork-folder {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    .cowork-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-cowork-model {
+      background: #ffffff;
+      border: 1px solid #3b82f6;
+      color: #3b82f6;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-start-cowork {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .cowork-main-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 260px;
+    }
+
+    .cowork-left-feed {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cowork-task-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cowork-task-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cowork-task-text {
+      font-size: 0.86rem;
+      color: #334155;
+    }
+
+    .cowork-prompt-bar {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-size: 0.86rem;
+    }
+
+    .cowork-right-stats {
+      background: #ffffff;
+      border-left: 1px solid #e2e8f0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .stats-progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .stats-progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .stats-session-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    /* SCREEN 4: REAL SETTINGS MODAL VIEW */
+    #screen-settings {
+      position: relative;
+      background: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-backdrop-blur {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(15, 17, 26, 0.4);
+    }
+
+    .settings-modal-card {
+      position: relative;
+      z-index: 2;
+      width: 440px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      color: #1f2937;
+    }
+
+    .modal-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header-row h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .modal-desc {
+      font-size: 0.82rem;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .modal-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .modal-input {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      font-family: var(--font-mono);
+      background: #f9fafb;
+      color: #1f2937;
+    }
+
+    .btn-test-modal {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .modal-models-section {
+      border-top: 1px solid #f3f4f6;
+      padding-top: 12px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
 
-    .sim-chat-item {
-      padding: 8px 10px;
-      border-radius: 7px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .sim-chat-item:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-main);
-    }
-
-    .sim-chat-item.active {
-      background: rgba(255, 255, 255, 0.08);
+    .btn-modal-save {
+      background: #3b82f6;
       color: #ffffff;
-      font-weight: 500;
-      border-left: 2px solid var(--primary);
-    }
-
-    .sim-chat-footer {
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .sim-chat-main {
-      background: #0d101a;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 18px 22px;
-    }
-
-    .chat-top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .model-badge-active {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 12px;
-      border-radius: 8px;
-      background: rgba(99, 102, 241, 0.12);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #a5b4fc;
-      font-size: 0.82rem;
-      font-family: var(--font-mono);
-      font-weight: 600;
-    }
-
-    .chat-stats-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
-
-    .sim-message-flow {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin: 18px 0;
-      overflow-y: auto;
-    }
-
-    .msg-box {
-      max-width: 90%;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 0.88rem;
-      line-height: 1.5;
-    }
-
-    .msg-user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #ffffff;
-      border-bottom-right-radius: 3px;
-    }
-
-    .msg-ai {
-      align-self: flex-start;
-      background: rgba(22, 27, 43, 0.7);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-bottom-left-radius: 3px;
-    }
-
-    .think-bubble {
-      background: rgba(0, 0, 0, 0.3);
-      border-left: 2px solid var(--cyan);
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      font-size: 0.78rem;
-      color: #94a3b8;
-      font-family: var(--font-mono);
-    }
-
-    .code-snippet-box {
-      background: #050609;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .code-snippet-header {
-      background: rgba(255, 255, 255, 0.04);
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      color: var(--text-muted);
-    }
-
-    .code-snippet-body {
-      padding: 12px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: #38bdf8;
-      line-height: 1.45;
-      overflow-x: auto;
-    }
-
-    .sim-input-wrapper {
-      background: rgba(18, 22, 35, 0.8);
-      border: 1px solid var(--border-accent);
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .sim-input-placeholder {
-      color: #64748b;
-      font-size: 0.86rem;
-    }
-
-    .sim-send-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: var(--primary);
       border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      cursor: pointer;
-    }
-
-    /* SCREEN 2: COWORK VIEW */
-    #view-cowork {
-      grid-template-columns: 280px 1fr;
-    }
-
-    .cowork-agents-panel {
-      background: #090c14;
-      border-right: 1px solid var(--border-color);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .agent-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .agent-card.running {
-      border-color: rgba(99, 102, 241, 0.4);
-      background: rgba(99, 102, 241, 0.06);
-    }
-
-    .agent-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .agent-name-tag {
-      font-size: 0.82rem;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.86rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .agent-badge-status {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: var(--font-mono);
-    }
-    .badge-running { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
-    .badge-ready { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-    .badge-waiting { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
-
-    .agent-desc {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .cowork-timeline-area {
-      background: #0d101a;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .cowork-feed-item {
-      display: flex;
-      gap: 12px;
-      position: relative;
-    }
-
-    .feed-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      background: rgba(99, 102, 241, 0.2);
-      border: 1px solid var(--border-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .feed-content-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-color);
-      border-radius: 9px;
-      padding: 10px 14px;
-      font-size: 0.84rem;
-      flex-grow: 1;
-    }
-
-    .feed-meta {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* SCREEN 3: CODE WORKSPACE VIEW */
-    #view-code {
-      grid-template-columns: 200px 1fr 240px;
-    }
-
-    .code-tree-panel {
-      background: #090c14;
-      border-right: 1px solid var(--border-color);
-      padding: 14px 10px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-    }
-
-    .tree-item {
-      padding: 4px 8px;
-      border-radius: 5px;
-      color: var(--text-muted);
+      margin-left: auto;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .tree-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.03); }
-    .tree-item.active { background: rgba(99, 102, 241, 0.15); color: #818cf8; font-weight: 600; }
-    .tree-item.folder { font-weight: 600; color: #cbd5e1; }
-
-    .code-editor-panel {
-      background: #0c0f18;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--border-color);
-    }
-
-    .editor-tabs-bar {
-      height: 36px;
-      background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-    }
-
-    .editor-tab {
-      padding: 0 14px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      border-right: 1px solid var(--border-color);
-      cursor: pointer;
-    }
-    .editor-tab.active {
-      background: #0c0f18;
-      color: var(--cyan);
-      border-top: 2px solid var(--cyan);
-    }
-
-    .editor-lines {
-      padding: 14px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      line-height: 1.6;
-      color: #e2e8f0;
-      flex-grow: 1;
-    }
-
-    .line-num { color: #475569; margin-right: 12px; user-select: none; }
-    .kw { color: #f43f5e; }
-    .fn { color: #38bdf8; }
-    .str { color: #34d399; }
-    .typ { color: #fbbf24; }
-
-    .terminal-bottom-strip {
-      background: #06080d;
-      border-top: 1px solid var(--border-color);
-      padding: 8px 12px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      color: #10b981;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .code-assistant-panel {
-      background: #090c14;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* SCREEN 4: SETUP VIEW */
-    #view-setup {
-      grid-template-columns: 1fr;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      background: #090c14;
-    }
-
-    .setup-card-box {
-      max-width: 520px;
-      margin: 0 auto;
-      background: rgba(18, 22, 35, 0.85);
-      border: 1px solid var(--border-accent);
-      border-radius: 16px;
-      padding: 32px;
-      text-align: center;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    }
-
-    .setup-icon-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--cyan));
-      margin: 0 auto 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
     }
 
     /* Downloads Section */
@@ -901,7 +1042,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
@@ -1090,12 +1231,12 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: rgba(99, 102, 241, 0.14);
+      background: rgba(59, 130, 246, 0.14);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
-      color: #818cf8;
+      color: #60a5fa;
     }
 
     .feature-icon svg {
@@ -1196,8 +1337,12 @@
     @media (max-width: 860px) {
       .hero-title { font-size: 2.5rem; }
       .nav-links { display: none; }
-      #view-chat, #view-cowork, #view-code { grid-template-columns: 1fr; }
-      .sim-sidebar, .cowork-agents-panel, .code-tree-panel, .code-assistant-panel { display: none; }
+      .real-app-layout { grid-template-columns: 1fr; }
+      .real-sidebar { display: none; }
+      .code-3col-body { grid-template-columns: 1fr; }
+      .code-col-explorer, .code-col-assistant { display: none; }
+      .cowork-main-split { grid-template-columns: 1fr; }
+      .cowork-right-stats { display: none; }
     }
   </style>
 </head>
@@ -1213,11 +1358,11 @@
             <polyline points="8 6 2 12 8 18"></polyline>
           </svg>
         </div>
-        <span class="logo-text">local-<span>code</span></span>
+        <span class="logo-text"><span class="blue">LOCAL</span> CODE</span>
       </a>
 
       <ul class="nav-links">
-        <li><a href="#preview">Interface do App</a></li>
+        <li><a href="#preview">Interface Real</a></li>
         <li><a href="#features">Recursos</a></li>
         <li><a href="#tech">Tecnologias</a></li>
         <li><a href="#downloads">Downloads</a></li>
@@ -1273,325 +1418,300 @@
         <p class="detected-os-text" id="detected-os-info">Detectando seu sistema operacional...</p>
       </div>
 
-      <!-- Real App Preview Window Simulator -->
+      <!-- Real App Preview Window (100% Authentic to the App Screens) -->
       <div class="app-preview-wrapper" id="preview">
         <div class="app-preview-window">
           
           <!-- Window Title Bar -->
-          <div class="window-header">
-            <div class="window-controls">
-              <span class="control-dot close"></span>
-              <span class="control-dot min"></span>
-              <span class="control-dot max"></span>
+          <div class="app-mac-header">
+            <div class="mac-dots">
+              <span class="mac-dot red"></span>
+              <span class="mac-dot yellow"></span>
+              <span class="mac-dot green"></span>
             </div>
             
-            <div class="window-title">
-              <span>local-code</span>
-              <span class="window-status-tag">
-                <span class="status-dot-pulse"></span>
-                <span>Ollama: 127.0.0.1:11434 (Online)</span>
-              </span>
-            </div>
+            <div class="mac-title">local-code</div>
 
-            <!-- Mode Switcher Tabs -->
-            <div class="simulator-nav-tabs">
-              <button class="sim-tab-btn active" onclick="switchSimScreen('chat', this)" id="tab-btn-chat">
+            <!-- Screen View Tabs -->
+            <div class="app-screen-tabs">
+              <button class="app-tab-btn active" onclick="switchAppTab('chat', this)" id="tab-btn-chat">
                 <span>💬 Chat</span>
               </button>
-              <button class="sim-tab-btn" onclick="switchSimScreen('cowork', this)" id="tab-btn-cowork">
-                <span>🤖 Cowork</span>
+              <button class="app-tab-btn" onclick="switchAppTab('code', this)" id="tab-btn-code">
+                <span>&lt;&gt; Code</span>
               </button>
-              <button class="sim-tab-btn" onclick="switchSimScreen('code', this)" id="tab-btn-code">
-                <span>💻 Code</span>
+              <button class="app-tab-btn" onclick="switchAppTab('cowork', this)" id="tab-btn-cowork">
+                <span>👥 Cowork</span>
               </button>
-              <button class="sim-tab-btn" onclick="switchSimScreen('setup', this)" id="tab-btn-setup">
-                <span>⚙️ Setup</span>
+              <button class="app-tab-btn" onclick="switchAppTab('settings', this)" id="tab-btn-settings">
+                <span>⚙️ Configurações</span>
               </button>
             </div>
           </div>
 
-          <!-- SCREEN 1: CHAT AREA (MainChatArea) -->
-          <div class="screen-view active" id="view-chat">
-            <!-- Sidebar -->
-            <div class="sim-sidebar">
-              <button class="sim-new-chat-btn">
-                <span>+ Novo Chat</span>
-              </button>
+          <!-- Real App Grid Layout -->
+          <div class="real-app-layout">
+            
+            <!-- Real App Sidebar (Common across all tabs) -->
+            <aside class="real-sidebar">
+              <div class="sidebar-brand-row">
+                <div class="sidebar-brand-logo">
+                  <span class="b1">LOCAL</span> <span class="b2">CODE</span>
+                </div>
+                <button class="sidebar-add-btn" aria-label="Novo chat">+</button>
+              </div>
 
-              <div class="sidebar-section-title">Conversas Recentes</div>
-              <div class="sim-chat-list">
-                <div class="sim-chat-item active">
-                  <span>⚡ Cache Thread-Safe Rust</span>
+              <div class="sidebar-tabs-pill">
+                <button class="sidebar-pill-item active" id="pill-chat" onclick="switchAppTab('chat')">
+                  <span>💬 Chat</span>
+                </button>
+                <button class="sidebar-pill-item" id="pill-code" onclick="switchAppTab('code')">
+                  <span>&lt;&gt; Code</span>
+                </button>
+                <button class="sidebar-pill-item" id="pill-cowork" onclick="switchAppTab('cowork')">
+                  <span>👥 Cowork</span>
+                </button>
+              </div>
+
+              <div class="sidebar-search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Search conversations...</span>
+              </div>
+            </aside>
+
+            <!-- SCREEN 1: REAL CHAT VIEW -->
+            <div class="screen-container active" id="screen-chat">
+              <div class="chat-top-header">
+                <div class="dropdown-btn-model">
+                  <span>Nenhum modelo</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
-                <div class="sim-chat-item">
-                  <span>🦀 Tauri 2 Window Events</span>
-                </div>
-                <div class="sim-chat-item">
-                  <span>🧠 Análise DeepSeek-R1</span>
-                </div>
-                <div class="sim-chat-item">
-                  <span>🧪 Testes Vitest & React 19</span>
+                <div class="gear-btn" onclick="switchAppTab('settings')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
                 </div>
               </div>
 
-              <div class="sim-chat-footer">
-                <span>Instância: Local Ollama</span>
-                <span style="color: #34d399;">● 100% Offline</span>
+              <div class="chat-empty-body">
+                <span>Não existem mensagens a serem exibidas</span>
+              </div>
+
+              <div class="chat-input-area">
+                <div class="chat-input-card">
+                  <div class="chat-input-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                    </svg>
+                    <span>Message...</span>
+                  </div>
+                  <div class="chat-input-right">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                      <line x1="12" y1="19" x2="12" y2="23"></line>
+                      <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    <div class="send-arrow-circle">↑</div>
+                  </div>
+                </div>
+                <div class="chat-input-disclaimer">
+                  Modelos locais também podem cometer erros. Confira as respostas.
+                </div>
               </div>
             </div>
 
-            <!-- Chat Main Content -->
-            <div class="sim-chat-main">
-              <div class="chat-top-bar">
-                <div class="model-badge-active">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                    <polyline points="2 17 12 22 22 17"></polyline>
-                    <polyline points="2 12 12 17 22 12"></polyline>
-                  </svg>
-                  <span>deepseek-r1:14b</span>
+            <!-- SCREEN 2: REAL CODE WORKSPACE VIEW -->
+            <div class="screen-container" id="screen-code">
+              <div class="code-top-header">
+                <div class="code-proj-btn">
+                  <span>📁 Abrir Projeto...</span>
+                  <span>🗂️</span>
                 </div>
-                <div class="chat-stats-badge">
-                  <span>⚡ 58.4 tokens/s</span>
-                  <span>•</span>
-                  <span>TTFT: 380ms</span>
+                <div class="code-header-right">
+                  <div class="warning-model-badge">
+                    <span>⚠️ Nenhum modelo disponível ⌄</span>
+                  </div>
+                  <button class="commit-btn">
+                    <span>⟳ Commit</span>
+                  </button>
                 </div>
               </div>
 
-              <div class="sim-message-flow">
-                <!-- User message -->
-                <div class="msg-box msg-user">
-                  Como implementar um cache thread-safe em memória em Rust utilizando Arc e RwLock com limpeza automática?
+              <div class="code-3col-body">
+                <!-- Col 1: Explorador -->
+                <div class="code-col-explorer">
+                  <div>
+                    <div class="col-title">Explorador</div>
+                    <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 8px;">Nenhum projeto aberto</div>
+                    <div class="btn-open-folder">Abrir Pasta...</div>
+                  </div>
+                  <div>
+                    <div class="col-title">Alterações • 0</div>
+                    <div style="font-size: 0.78rem; color: #64748b; font-style: italic;">Sem alterações</div>
+                  </div>
                 </div>
 
-                <!-- AI Response -->
-                <div class="msg-box msg-ai">
-                  <div class="think-bubble">
-                    💭 <strong>Pensamento do DeepSeek-R1:</strong> O usuário deseja uma estrutura concorrente em Rust com suporte a leitura paralela e escrita exclusiva. Usarei Arc&lt;RwLock&lt;HashMap&lt;K, V&gt;&gt;&gt; com chave genérica e timestamps para invalidação de TTL.
+                <!-- Col 2: Center Editor -->
+                <div class="code-col-center">
+                  <div class="center-state-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                      <line x1="12" y1="11" x2="12" y2="17"></line>
+                      <line x1="9" y1="14" x2="15" y2="14"></line>
+                    </svg>
                   </div>
+                  <div class="center-state-title">Nenhum projeto conectado</div>
+                  <div class="center-state-desc">
+                    Abra uma pasta de código local para navegar, editar e carregar o contexto dos arquivos nas solicitações ao modelo
+                  </div>
+                  <button class="btn-center-action">
+                    <span>📁 Abrir Pasta do Projeto...</span>
+                  </button>
+                </div>
 
-                  Aqui está uma implementação idiomática e thread-safe para o seu backend nativo em Rust:
+                <!-- Col 3: Assistant -->
+                <div class="code-col-assistant">
+                  <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 30px;">
+                    <div class="col-title" style="margin: 0; color: #cbd5e1;">🤖 Assistente</div>
+                    <span style="color: #64748b;">•••</span>
+                  </div>
+                  <div class="center-state-icon" style="margin-top: 40px;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                      <circle cx="12" cy="5" r="2"></circle>
+                      <path d="M12 7v4"></path>
+                      <line x1="8" y1="16" x2="8.01" y2="16"></line>
+                      <line x1="16" y1="16" x2="16.01" y2="16"></line>
+                    </svg>
+                  </div>
+                  <div style="font-size: 0.78rem; color: #64748b; line-height: 1.5; margin-top: 12px;">
+                    Faça perguntas sobre o código do projeto ou solicite refatoração. O contexto do arquivo ativo é enviado automaticamente.
+                  </div>
+                </div>
 
-                  <div class="code-snippet-box">
-                    <div class="code-snippet-header">
-                      <span>rust — src/cache/memory.rs</span>
-                      <span>Copiar código</span>
+                <!-- Toast Alert -->
+                <div class="toast-alert-ollama">
+                  <div style="font-size: 1rem; color: #1f2937;">⚠️</div>
+                  <div>
+                    <strong style="display: block; margin-bottom: 2px;">Ollama inacessível</strong>
+                    <span style="color: #64748b;">Verifique se o servidor está rodando em http://localhost:11434</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 3: REAL COWORK VIEW -->
+            <div class="screen-container" id="screen-cowork">
+              <div class="cowork-top-header">
+                <div class="cowork-header-left">
+                  <span class="cowork-title">Nova sessão de cowork</span>
+                  <span class="badge-awaiting">Aguardando</span>
+                  <div class="input-cowork-folder">📁 Selecionar pasta do projeto...</div>
+                </div>
+                <div class="cowork-header-right">
+                  <div class="btn-cowork-model">
+                    <span>✨ Claude 3.5 Sonnet ⌄</span>
+                  </div>
+                  <button style="background: transparent; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #64748b;">
+                    ⏸ Pausar
+                  </button>
+                  <button class="btn-start-cowork">
+                    <span>▶ Iniciar</span>
+                  </button>
+                  <span class="gear-btn" onclick="switchAppTab('settings')">⚙️</span>
+                </div>
+              </div>
+
+              <div class="cowork-main-split">
+                <!-- Left Task Feed -->
+                <div class="cowork-left-feed">
+                  <div class="cowork-task-card">
+                    <span class="cowork-task-label">TAREFA</span>
+                    <span class="cowork-task-text">
+                      Digite uma orientação ou tarefa na barra de prompt abaixo para iniciar o agente em modo Cowork no seu projeto.
+                    </span>
+                  </div>
+                  
+                  <div class="cowork-prompt-bar">
+                    <span>Orientar o agente ou ajustar a tarefa...</span>
+                    <div class="send-arrow-circle">↑</div>
+                  </div>
+                </div>
+
+                <!-- Right Stats Panel -->
+                <div class="cowork-right-stats">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #3b82f6; font-weight: 600; margin-bottom: 12px;">
+                      <span>0 iterações</span>
                     </div>
-                    <div class="code-snippet-body">use std::collections::HashMap;
-use std::sync::{Arc, RwLock};
-use std::time::{Duration, Instant};
+                    <div class="stats-progress-header">
+                      <span>Progresso da tarefa</span>
+                      <span style="color: #3b82f6;">0%</span>
+                    </div>
+                    <div class="stats-progress-bar"></div>
+                  </div>
 
-#[derive(Clone)]
-pub struct LocalCache&lt;K, V&gt; {
-    store: Arc&lt;RwLock&lt;HashMap&lt;K, (V, Instant)&gt;&gt;&gt;,
-    ttl: Duration,
-}
-
-impl&lt;K: Eq + std::hash::Hash + Clone, V: Clone&gt; LocalCache&lt;K, V&gt; {
-    pub fn new(ttl: Duration) -> Self {
-        Self {
-            store: Arc::new(RwLock::new(HashMap::new())),
-            ttl,
-        }
-    }
-
-    pub fn get(&self, key: &K) -> Option&lt;V&gt; {
-        let read_guard = self.store.read().ok()?;
-        let (val, timestamp) = read_guard.get(key)?;
-        if timestamp.elapsed() &lt; self.ttl {
-            Some(val.clone())
-        } else {
-            None
-        }
-    }
-}</div>
+                  <div class="stats-session-items">
+                    <div style="font-weight: 700; font-size: 0.82rem; color: #1e293b; margin-bottom: 4px;">Resumo da sessão</div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>⏱ Tempo ativo</span>
+                      <strong>0m 00s</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>&gt;_ Comandos executados</span>
+                      <strong>0</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>📄 Arquivos tocados</span>
+                      <strong>0</strong>
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Input bar -->
-              <div class="sim-input-wrapper">
-                <span class="sim-input-placeholder">Digite sua mensagem para o Ollama (Shift+Enter para quebra de linha)...</span>
-                <button class="sim-send-btn" aria-label="Enviar mensagem">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                  </svg>
+            <!-- SCREEN 4: REAL SETTINGS MODAL VIEW -->
+            <div class="screen-container" id="screen-settings">
+              <div class="settings-backdrop-blur"></div>
+              
+              <div class="settings-modal-card">
+                <div class="modal-header-row">
+                  <h3>Configurações do Ollama</h3>
+                  <span style="cursor: pointer; color: #6b7280; font-size: 1.1rem;" onclick="switchAppTab('chat')">✕</span>
+                </div>
+                
+                <p class="modal-desc">
+                  Edite a URL da API, teste a conexão e escolha quais modelos aparecem no chat.
+                </p>
+
+                <div class="modal-form-group">
+                  <label>URL da API</label>
+                  <input type="text" class="modal-input" value="http://localhost:11434" readonly>
+                </div>
+
+                <button class="btn-test-modal">
+                  <span>📶 Testar Conexão</span>
+                </button>
+
+                <div class="modal-models-section">
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #374151;">Modelos</label>
+                  <span style="font-size: 0.82rem; color: #9ca3af;">Nenhum modelo encontrado no Ollama</span>
+                </div>
+
+                <button class="btn-modal-save" onclick="switchAppTab('chat')">
+                  <span>💾 Salvar</span>
                 </button>
               </div>
             </div>
+
           </div>
-
-          <!-- SCREEN 2: COWORK AREA (CoworkArea) -->
-          <div class="screen-view" id="view-cowork">
-            <!-- Active Agents Panel -->
-            <div class="cowork-agents-panel">
-              <div class="sidebar-section-title">Agentes Autônomos Ativos</div>
-
-              <div class="agent-card running">
-                <div class="agent-header">
-                  <span class="agent-name-tag">📋 Planner Agent</span>
-                  <span class="agent-badge-status badge-ready">Concluído</span>
-                </div>
-                <span class="agent-desc">Decomposição das especificações de arquitetura.</span>
-              </div>
-
-              <div class="agent-card running">
-                <div class="agent-header">
-                  <span class="agent-name-tag">💻 Coder Agent</span>
-                  <span class="agent-badge-status badge-running">Executando</span>
-                </div>
-                <span class="agent-desc">Gerando handlers de IPC no Tauri em Rust.</span>
-              </div>
-
-              <div class="agent-card">
-                <div class="agent-header">
-                  <span class="agent-name-tag">🛡️ Reviewer Agent</span>
-                  <span class="agent-badge-status badge-waiting">Na fila</span>
-                </div>
-                <span class="agent-desc">Verificação estática e análise de segurança de memória.</span>
-              </div>
-
-              <div class="agent-card">
-                <div class="agent-header">
-                  <span class="agent-name-tag">🧪 Tester Agent</span>
-                  <span class="agent-badge-status badge-waiting">Na fila</span>
-                </div>
-                <span class="agent-desc">Execução da suite de testes de integração com Vitest.</span>
-              </div>
-            </div>
-
-            <!-- Cowork Feed & Timeline -->
-            <div class="cowork-timeline-area">
-              <div class="chat-top-bar">
-                <div class="model-badge-active">
-                  <span>Sessão: Refatoração do Módulo de Conexão Ollama</span>
-                </div>
-                <span style="font-size: 0.78rem; color: #34d399; font-family: var(--font-mono);">
-                  ● 3 tarefas restantes
-                </span>
-              </div>
-
-              <div class="cowork-feed-item">
-                <div class="feed-avatar">📋</div>
-                <div class="feed-content-box">
-                  <div class="feed-meta">
-                    <strong>Planner Agent (qwen2.5-coder:32b)</strong>
-                    <span>12:44:10</span>
-                  </div>
-                  <span>Plano de refatoração estruturado em 3 fases: 1) Handlers Rust com backoff exponencial; 2) Hook React useChats com reconexão automática; 3) Testes unitários com mock HTTP.</span>
-                </div>
-              </div>
-
-              <div class="cowork-feed-item">
-                <div class="feed-avatar">💻</div>
-                <div class="feed-content-box" style="border-color: var(--border-accent);">
-                  <div class="feed-meta">
-                    <strong style="color: var(--cyan);">Coder Agent (deepseek-r1:14b)</strong>
-                    <span>12:44:28 — agora</span>
-                  </div>
-                  <span>Atualizando <code class="inline-code">src/hooks/useChats.ts</code> para interceptar falhas de conexão temporárias e disparar toast não intrusivo:</span>
-                  <div class="code-terminal-snippet">+ useOllamaErrorToast(models.length === 0 ? error : null, ollamaUrl);</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SCREEN 3: CODE WORKSPACE (CodeArea) -->
-          <div class="screen-view" id="view-code">
-            <!-- File Tree Explorer -->
-            <div class="code-tree-panel">
-              <div class="sidebar-section-title" style="margin-bottom: 8px;">Explorador Local</div>
-              <div class="tree-item folder">📁 src</div>
-              <div class="tree-item folder" style="padding-left: 16px;">📁 components</div>
-              <div class="tree-item" style="padding-left: 28px;">📄 App.tsx</div>
-              <div class="tree-item folder" style="padding-left: 16px;">📁 store</div>
-              <div class="tree-item active" style="padding-left: 28px;">📄 settingsStore.ts</div>
-              <div class="tree-item folder" style="padding-left: 16px;">📁 hooks</div>
-              <div class="tree-item" style="padding-left: 28px;">📄 useChats.ts</div>
-              <div class="tree-item folder">📁 src-tauri</div>
-              <div class="tree-item" style="padding-left: 16px;">📄 Cargo.toml</div>
-              <div class="tree-item" style="padding-left: 16px;">📄 tauri.conf.json</div>
-            </div>
-
-            <!-- Code Editor -->
-            <div class="code-editor-panel">
-              <div class="editor-tabs-bar">
-                <div class="editor-tab active">
-                  <span>settingsStore.ts</span>
-                </div>
-                <div class="editor-tab">
-                  <span>useChats.ts</span>
-                </div>
-                <div class="editor-tab">
-                  <span>App.tsx</span>
-                </div>
-              </div>
-
-              <div class="editor-lines">
-                <div><span class="line-num">1</span><span class="kw">import</span> { create } <span class="kw">from</span> <span class="str">"zustand"</span>;</div>
-                <div><span class="line-num">2</span><span class="kw">import</span> { persist } <span class="kw">from</span> <span class="str">"zustand/middleware"</span>;</div>
-                <div><span class="line-num">3</span></div>
-                <div><span class="line-num">4</span><span class="kw">export interface</span> <span class="typ">SettingsState</span> {</div>
-                <div><span class="line-num">5</span>  ollamaUrl: <span class="typ">string</span>;</div>
-                <div><span class="line-num">6</span>  setOllamaUrl: (url: <span class="typ">string</span>) =&gt; <span class="typ">void</span>;</div>
-                <div><span class="line-num">7</span>}</div>
-                <div><span class="line-num">8</span></div>
-                <div><span class="line-num">9</span><span class="kw">export const</span> <span class="fn">useSettingsStore</span> = create&lt;<span class="typ">SettingsState</span>&gt;()(</div>
-                <div><span class="line-num">10</span>  persist(</div>
-                <div><span class="line-num">11</span>    (set) =&gt; ({</div>
-                <div><span class="line-num">12</span>      ollamaUrl: <span class="str">"http://localhost:11434"</span>,</div>
-                <div><span class="line-num">13</span>      setOllamaUrl: (url) =&gt; set({ ollamaUrl: url.trim() }),</div>
-                <div><span class="line-num">14</span>    }),</div>
-                <div><span class="line-num">15</span>    { name: <span class="str">"local-code-settings"</span> }</div>
-                <div><span class="line-num">16</span>  )</div>
-                <div><span class="line-num">17</span>);</div>
-              </div>
-
-              <div class="terminal-bottom-strip">
-                <span>✓ terminal: vitest run — 14 passados em 412ms (100% de cobertura)</span>
-              </div>
-            </div>
-
-            <!-- Assistant Sidebar -->
-            <div class="code-assistant-panel">
-              <div class="sidebar-section-title">Contexto de IA Local</div>
-              <div style="font-size: 0.76rem; color: var(--text-muted);">
-                Análise em tempo real do arquivo aberto com <strong>Codestral</strong>.
-              </div>
-              <div class="agent-card running">
-                <span style="font-size: 0.74rem; color: #38bdf8;">✨ Sugestão de Refatoração:</span>
-                <span style="font-size: 0.72rem; color: var(--text-muted);">Validação de URL via regex antes da persistência no storage nativo.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- SCREEN 4: SETUP & PRIVACY (SetupScreen) -->
-          <div class="screen-view" id="view-setup">
-            <div class="setup-card-box">
-              <div class="setup-icon-circle">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-              <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Conexão com Ollama Local</h3>
-              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">
-                Conecte-se à sua instância local do Ollama para executar modelos com zero latência e 100% de privacidade offline.
-              </p>
-
-              <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-accent); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; font-family: var(--font-mono); font-size: 0.88rem;">
-                <span style="color: #38bdf8;">http://localhost:11434</span>
-                <span style="color: #34d399; font-size: 0.75rem;">● Conectado (8ms)</span>
-              </div>
-
-              <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                <span class="inline-code">deepseek-r1:14b</span>
-                <span class="inline-code">llama3.3:70b</span>
-                <span class="inline-code">qwen2.5-coder:32b</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 
@@ -1652,7 +1772,7 @@ impl&lt;K: Eq + std::hash::Hash + Clone, V: Clone&gt; LocalCache&lt;K, V&gt; {
           </div>
         </div>
 
-        <!-- Linux -->
+        <!-- Linux (Tux Penguin Icon) -->
         <div class="download-card" id="card-linux">
           <span class="card-badge-recommended" id="badge-linux" style="display: none;">Seu Sistema</span>
           <div class="os-icon">
@@ -1848,27 +1968,37 @@ impl&lt;K: Eq + std::hash::Hash + Clone, V: Clone&gt; LocalCache&lt;K, V&gt; {
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>© 2026 local-code. Projeto open-source sob <a href="https://github.com/ramondiniz27/local-code-project/blob/master/LICENSE" target="_blank" style="color: var(--primary); text-decoration: underline;">Licença MIT</a> | Desenvolvido por <a href="https://github.com/ramondiniz27" target="_blank" style="color: #a5b4fc; text-decoration: underline;">Ramon Diniz</a>.</p>
+      <p>© 2026 local-code. Projeto open-source sob <a href="https://github.com/ramondiniz27/local-code-project/blob/master/LICENSE" target="_blank" style="color: var(--primary); text-decoration: underline;">Licença MIT</a> | Desenvolvido por <a href="https://github.com/ramondiniz27" target="_blank" style="color: #93c5fd; text-decoration: underline;">Ramon Diniz</a>.</p>
     </div>
   </footer>
 
   <script>
-    // Simulator Screen Switcher
-    function switchSimScreen(screenId, btn) {
-      // Update tab buttons
-      document.querySelectorAll('.sim-tab-btn').forEach(function(b) {
+    // App Screen Switcher
+    function switchAppTab(tabId, btn) {
+      // Update top tab buttons
+      document.querySelectorAll('.app-tab-btn').forEach(function(b) {
         b.classList.remove('active');
       });
-      if (btn) {
-        btn.classList.add('active');
+      const topBtn = document.getElementById('tab-btn-' + tabId);
+      if (topBtn) {
+        topBtn.classList.add('active');
       }
 
-      // Update screen views
-      document.querySelectorAll('.screen-view').forEach(function(view) {
-        view.classList.remove('active');
+      // Update sidebar pills
+      document.querySelectorAll('.sidebar-pill-item').forEach(function(p) {
+        p.classList.remove('active');
+      });
+      const pill = document.getElementById('pill-' + tabId);
+      if (pill) {
+        pill.classList.add('active');
+      }
+
+      // Update screen container
+      document.querySelectorAll('.screen-container').forEach(function(s) {
+        s.classList.remove('active');
       });
 
-      const target = document.getElementById('view-' + screenId);
+      const target = document.getElementById('screen-' + tabId);
       if (target) {
         target.classList.add('active');
       }

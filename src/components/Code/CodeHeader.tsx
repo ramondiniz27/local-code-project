@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GitBranch, Sparkles, ChevronDown, GitCommitHorizontal, FolderGit2, AlertCircle, FolderOpen } from "lucide-react";
+import { GitBranch, Sparkles, ChevronDown, GitCommitHorizontal, FolderGit2, AlertCircle, FolderOpen, Settings } from "lucide-react";
 import { useModels } from "../../hooks/useModels";
 import { useOllamaErrorToast } from "../../hooks/useOllamaErrorToast";
 import { useSettingsStore } from "../../store/settingsStore";
@@ -13,6 +13,7 @@ interface CodeHeaderProps {
 export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
   const { models, selectedModel, setSelectedModel, isConnected, error } = useModels(5000);
   const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
+  const setIsSettingsOpen = useSettingsStore((s) => s.setIsSettingsOpen);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const [localBranches, setLocalBranches] = useState<string[]>([]);
@@ -175,6 +176,16 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
             </>
           )}
         </div>
+
+        {/* Settings Button */}
+        <button
+          type="button"
+          onClick={() => setIsSettingsOpen(true)}
+          className="flex items-center justify-center rounded-lg bg-[#2a2a42] p-1.5 text-[#9ca3af] hover:bg-[#343452] hover:text-white transition-colors cursor-pointer"
+          title="Configurações"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
 
         {/* Commit Button */}
         <button

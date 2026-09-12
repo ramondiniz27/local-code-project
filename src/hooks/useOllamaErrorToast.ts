@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { useSettingsStore } from "../../store/settingsStore";
 
 /**
  * Displays a single error toast when the Ollama server is unreachable.
@@ -12,6 +13,7 @@ import { toast } from "sonner";
  */
 export function useOllamaErrorToast(error: string | null, ollamaUrl: string) {
   const toastIdRef = useRef<string | number | null>(null);
+  const setIsSettingsOpen = useSettingsStore((s) => s.setIsSettingsOpen);
 
   useEffect(() => {
     if (error) {
@@ -21,6 +23,10 @@ export function useOllamaErrorToast(error: string | null, ollamaUrl: string) {
       const id = toast.error("Ollama inacessível", {
         description: `Verifique se o servidor está rodando em ${ollamaUrl}`,
         duration: 6000,
+        action: {
+          label: "Configurar",
+          onClick: () => setIsSettingsOpen(true),
+        },
         onDismiss: () => {
           // User dismissed — clear the ref so the next failure can re-toast
           toastIdRef.current = null;

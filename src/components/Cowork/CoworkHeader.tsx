@@ -1,6 +1,7 @@
-import { Users, Plus, SlidersHorizontal, RefreshCw } from "lucide-react";
+import { Users, Plus, SlidersHorizontal, RefreshCw, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useSettingsStore } from "../../store/settingsStore";
 
 interface CoworkHeaderProps {
   onNewSession?: () => void;
@@ -8,6 +9,8 @@ interface CoworkHeaderProps {
 }
 
 export function CoworkHeader({ onNewSession, activeAgentsCount }: CoworkHeaderProps) {
+  const setIsSettingsOpen = useSettingsStore((s) => s.setIsSettingsOpen);
+
   return (
     <header className="flex h-16 w-full shrink-0 items-center justify-between border-b border-border-light bg-bg-input px-6 shadow-xs">
       <div className="flex items-center gap-3">
@@ -29,6 +32,15 @@ export function CoworkHeader({ onNewSession, activeAgentsCount }: CoworkHeaderPr
       </div>
 
       <div className="flex items-center gap-2">
+        <Button
+          onClick={() => setIsSettingsOpen(true)}
+          variant="outline"
+          size="sm"
+          className="h-9 w-9 p-0 text-text-secondary border-border-light hover:bg-black/5"
+          title="Configurações"
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
         <Button
           variant="outline"
           size="sm"

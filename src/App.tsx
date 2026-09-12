@@ -8,6 +8,7 @@ import { SetupScreen } from "./components/SetupScreen";
 import { useChats } from "./hooks/useChats";
 import { useSettingsStore } from "./store/settingsStore";
 import { useOllamaErrorToast } from "./hooks/useOllamaErrorToast";
+import { SettingsModal } from "./components/Settings/SettingsModal";
 
 function App() {
   const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
@@ -50,6 +51,9 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
     startNewChat();
   };
 
+  const isSettingsOpen = useSettingsStore((s) => s.isSettingsOpen);
+  const setIsSettingsOpen = useSettingsStore((s) => s.setIsSettingsOpen);
+
   return (
     <div className="flex h-full w-full overflow-hidden">
       <Sidebar
@@ -78,6 +82,7 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
       )}
       {activeTab === "cowork" && <CoworkArea />}
       {activeTab === "code" && <CodeArea />}
+      <SettingsModal open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
     </div>
   );
 }
