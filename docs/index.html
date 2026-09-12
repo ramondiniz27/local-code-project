@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>local-code | Workspace de IA Local & Privado</title>
+  <meta name="description" content="Aplicativo desktop nativo e focado em privacidade desenvolvido com Tauri 2, React 19, Rust e Ollama. Execute LLMs 100% localmente no seu computador.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #090a0f;
+      --bg-card: rgba(18, 20, 29, 0.7);
+      --bg-card-hover: rgba(28, 32, 47, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.35);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      --accent: #8b5cf6;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 65%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 10, 15, 0.8);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .logo-badge svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .btn-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 90px 0 60px;
+      text-align: center;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #a5b4fc;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .hero-title {
+      font-size: 3.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 720px;
+      margin: 0 auto 36px;
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 50px;
+    }
+
+    .hero-buttons-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 4px 24px var(--primary-glow);
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .detected-os-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .detected-os-text strong {
+      color: var(--cyan);
+    }
+
+    /* Desktop Window Preview Simulator */
+    .app-preview-window {
+      max-width: 1000px;
+      margin: 0 auto;
+      border-radius: 16px;
+      border: 1px solid var(--border-accent);
+      background: rgba(13, 16, 26, 0.95);
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8), 0 0 40px var(--primary-glow);
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .window-header {
+      height: 44px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .control-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .control-dot.close { background: #ef4444; }
+    .control-dot.min { background: #f59e0b; }
+    .control-dot.max { background: #10b981; }
+
+    .window-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-left: 12px;
+    }
+
+    .simulator-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .sim-tab {
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .sim-tab.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .window-body {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 480px;
+    }
+
+    /* App Sidebar Simulation */
+    .sim-sidebar {
+      background: rgba(10, 12, 20, 0.8);
+      border-right: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sim-new-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+      border: 1px solid var(--border-accent);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .sim-chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sim-chat-item {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .sim-chat-item.active {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* App Main Simulation Area */
+    .sim-main {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: rgba(15, 18, 28, 0.5);
+    }
+
+    .sim-model-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .model-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+    }
+
+    .sim-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex-grow: 1;
+    }
+
+    .msg-bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-ai {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+    }
+
+    .code-block {
+      background: #090a0f;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #38bdf8;
+      margin-top: 8px;
+      white-space: pre-wrap;
+    }
+
+    .sim-input-box {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Downloads Section */
+    .downloads-section {
+      padding: 100px 0 60px;
+      border-top: 1px solid var(--border-color);
+      background: rgba(13, 16, 26, 0.4);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+
+    .download-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-card.highlight {
+      border-color: var(--primary);
+      box-shadow: 0 0 30px var(--primary-glow);
+    }
+
+    .card-badge-recommended {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .download-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+    }
+
+    .os-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .download-card h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .download-card .os-meta {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .download-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .btn-dl {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-dl:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-dl .arch-tag {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      font-family: var(--font-mono);
+    }
+
+    /* Installation Guide Accordion */
+    .install-accordion {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .accordion-item {
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      padding: 16px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .accordion-content {
+      padding: 0 20px 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      display: none;
+    }
+
+    .accordion-content.open {
+      display: block;
+      padding-top: 16px;
+    }
+
+    .inline-code {
+      background: #090a0f;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Features Grid */
+    .features-section {
+      padding: 100px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Tech Stack Section */
+    .tech-section {
+      padding: 60px 0 100px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .tech-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .tech-item:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tech-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+
+    .tech-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick Start Terminal Box */
+    .quickstart-section {
+      padding: 80px 0;
+      background: rgba(13, 16, 26, 0.6);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .terminal-box {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #090a0f;
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-content {
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #38bdf8;
+      line-height: 1.8;
+    }
+
+    .terminal-comment {
+      color: #64748b;
+    }
+
+    .terminal-cmd {
+      color: #f1f5f9;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.4rem; }
+      .window-body { grid-template-columns: 1fr; }
+      .sim-sidebar { display: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-content">
+      <a href="#" class="logo-container">
+        <div class="logo-badge">
+          <svg viewBox="0 0 24 24">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </div>
+        <span class="logo-text">local-<span>code</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#downloads">Downloads</a></li>
+        <li><a href="#features">Recursos</a></li>
+        <li><a href="#demo">Modos</a></li>
+        <li><a href="#tech">Tecnologias</a></li>
+        <li><a href="#quickstart">Compilar</a></li>
+      </ul>
+
+      <a href="https://github.com/your-username/local-code" target="_blank" class="btn-github">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="pill-badge">
+        <span class="pill-dot"></span>
+        100% Offline & Focado em Privacidade
+      </div>
+
+      <h1 class="hero-title">
+        Seu Workspace Desktop de <span class="gradient-text">IA Nativa</span><br>Alimentado por Modelos Locais
+      </h1>
+
+      <p class="hero-subtitle">
+        Zero assinaturas em nuvem. Zero vazamento de dados. Converse, colabore e programe com <strong>Ollama</strong>, <strong>Tauri 2</strong> e <strong>React 19</strong> rodando diretamente no seu próprio computador.
+      </p>
+
+      <div class="hero-actions">
+        <div class="hero-buttons-row">
+          <a href="#downloads" id="hero-download-btn" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            <span id="hero-download-label">Baixar para Desktop</span>
+          </a>
+          <a href="#downloads" class="btn-secondary">
+            Ver todas as plataformas
+          </a>
+        </div>
+        <div class="detected-os-text" id="detected-os-info">
+          Detectado: <strong>macOS / Windows / Linux</strong>
+        </div>
+      </div>
+
+      <!-- App Preview Window -->
+      <div class="app-preview-window" id="demo">
+        <div class="window-header">
+          <div class="window-controls">
+            <span class="control-dot close"></span>
+            <span class="control-dot min"></span>
+            <span class="control-dot max"></span>
+          </div>
+          <span class="window-title">local-code — Desktop AI Studio</span>
+          
+          <div class="simulator-tabs">
+            <button class="sim-tab active" onclick="switchSimTab('chat')">💬 Chat</button>
+            <button class="sim-tab" onclick="switchSimTab('cowork')">🤝 Cowork</button>
+            <button class="sim-tab" onclick="switchSimTab('code')">💻 Code</button>
+          </div>
+        </div>
+
+        <div class="window-body">
+          <div class="sim-sidebar">
+            <button class="sim-new-btn">+ Nova Sessão</button>
+            <div class="sim-chat-list">
+              <div class="sim-chat-item active">💬 Rust Async Handlers</div>
+              <div class="sim-chat-item">💬 React 19 Compiler Tips</div>
+              <div class="sim-chat-item">💬 Ollama Model Benchmark</div>
+            </div>
+          </div>
+
+          <div class="sim-main">
+            <div class="sim-model-selector">
+              <span style="font-size: 0.85rem; color: var(--text-muted)">Modelo Ativo:</span>
+              <span class="model-badge">ollama://deepseek-r1:14b</span>
+            </div>
+
+            <div class="sim-messages" id="sim-messages-container">
+              <div class="msg-bubble msg-user">
+                Como definir comandos customizados no Tauri 2 em Rust?
+              </div>
+              <div class="msg-bubble msg-ai">
+                Aqui está um exemplo limpo de como declarar um comando assíncrono no Tauri 2:
+                <div class="code-block">#[tauri::command]
+pub async fn greet(name: String) -> Result&lt;String, String&gt; {
+    Ok(format!("Olá, {}! Executado com sucesso via Rust", name))
+}</div>
+              </div>
+            </div>
+
+            <div class="sim-input-box">
+              <span>Pergunte algo ou digite seu comando...</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Downloads Section -->
+  <section class="downloads-section" id="downloads">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Baixe o Executável Oficial</h2>
+        <p class="section-subtitle">Instaladores nativos ultra-leves (< 25MB) para macOS, Windows e Linux</p>
+      </div>
+
+      <div class="download-grid">
+        
+        <!-- macOS Card -->
+        <div class="download-card" id="card-macos">
+          <span class="card-badge-recommended" id="badge-macos" style="display: none;">Seu Sistema</span>
+          <div class="os-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 3.5c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.98.6-2.61 1.34-.55.63-.99 1.68-.87 2.69.99.08 2.01-.52 2.56-1.18z"/>
+            </svg>
+          </div>
+          <h3>macOS</h3>
+          <p class="os-meta">macOS 11 (Big Sur) ou superior</p>
+          <div class="download-btn-group">
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-mac-arm" class="btn-dl" target="_blank">
+              <span>Apple Silicon (.dmg)</span>
+              <span class="arch-tag">M1/M2/M3/M4</span>
+            </a>
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-mac-intel" class="btn-dl" target="_blank">
+              <span>Intel Mac (.dmg)</span>
+              <span class="arch-tag">x64</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Windows Card -->
+        <div class="download-card" id="card-windows">
+          <span class="card-badge-recommended" id="badge-windows" style="display: none;">Seu Sistema</span>
+          <div class="os-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+            </svg>
+          </div>
+          <h3>Windows</h3>
+          <p class="os-meta">Windows 10 / 11 (64-bit)</p>
+          <div class="download-btn-group">
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-win-exe" class="btn-dl" target="_blank">
+              <span>Instalador (.exe)</span>
+              <span class="arch-tag">NSIS x64</span>
+            </a>
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-win-msi" class="btn-dl" target="_blank">
+              <span>Pacote (.msi)</span>
+              <span class="arch-tag">MSI x64</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Linux Card -->
+        <div class="download-card" id="card-linux">
+          <span class="card-badge-recommended" id="badge-linux" style="display: none;">Seu Sistema</span>
+          <div class="os-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+            </svg>
+          </div>
+          <h3>Linux</h3>
+          <p class="os-meta">Ubuntu, Debian, Fedora, Arch (x64)</p>
+          <div class="download-btn-group">
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-linux-appimage" class="btn-dl" target="_blank">
+              <span>Universal (.AppImage)</span>
+              <span class="arch-tag">x64</span>
+            </a>
+            <a href="https://github.com/your-username/local-code/releases/latest" id="dl-linux-deb" class="btn-dl" target="_blank">
+              <span>Pacote Debian (.deb)</span>
+              <span class="arch-tag">Ubuntu/Debian</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Installation Guide Accordion -->
+      <div class="install-accordion">
+        <h3 style="text-align: center; margin-bottom: 8px; font-size: 1.15rem;">📌 Instruções de Primeira Instalação</h3>
+        
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🍏 Como abrir no macOS (Aviso de Desenvolvedor Não Verificado)</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            Como este é um projeto open-source sem certificação paga da Apple ($99/ano), o macOS Gatekeeper pode alertar que o app não pode ser aberto. Para autorizar:
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Abra o arquivo <span class="inline-code">.dmg</span> e arraste o <strong>local-code</strong> para a pasta <strong>Aplicativos</strong>.</li>
+              <li>Clique com o <strong>botão direito (Control + Clique)</strong> sobre o ícone do local-code e selecione <strong>Abrir</strong>.</li>
+              <li>Na janela de confirmação, clique em <strong>Abrir</strong>.</li>
+              <li>Ou execute no Terminal: <span class="inline-code">xattr -cr /Applications/local-code.app</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🐧 Como executar o AppImage no Linux</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            Após baixar o arquivo <span class="inline-code">.AppImage</span>:
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Abra o terminal na pasta do download e dê permissão de execução:
+                <div class="code-block">chmod +x local-code_*.AppImage
+./local-code_*.AppImage</div>
+              </li>
+              <li>Em distribuições recentes (Ubuntu 22.04+), garanta que o FUSE esteja instalado: <span class="inline-code">sudo apt install libfuse2</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🪟 Aviso do Windows SmartScreen</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            No primeiro lançamento no Windows Defender SmartScreen:
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Clique em <strong>Mais informações</strong> na tela azul do SmartScreen.</li>
+              <li>Clique no botão <strong>Executar assim mesmo</strong>.</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Desempenho Nativo & Privacidade Absoluta</h2>
+        <p class="section-subtitle">Por que desenvolvedores preferem executar LLMs localmente com o local-code</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3>100% Offline & Privado</h3>
+          <p>Seus prompts e códigos nunca saem do seu dispositivo. Sem APIs pagas, sem assinaturas e sem telemetria externa.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3>Velocidade Nativa com Tauri 2</h3>
+          <p>Construído com backend em Rust com baixíssimo consumo de memória RAM (< 50MB em repouso) e inicialização instantânea.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <h3>Workspaces Especializados</h3>
+          <p>Alterne entre os modos Chat, Cowork e Code, cada um otimizado para conversação, planejamento e geração de código.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="tech-section" id="tech">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Stack de Engenharia Moderna</h2>
+        <p class="section-subtitle">Tecnologias de ponta nativas para máxima performance</p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div style="color: var(--primary); font-size: 1.5rem; font-weight: 700;">Tauri 2</div>
+          <div class="tech-name">Native Desktop</div>
+          <div class="tech-desc">Rust Core Wrapper</div>
+        </div>
+        <div class="tech-item">
+          <div style="color: #61dafb; font-size: 1.5rem; font-weight: 700;">React 19</div>
+          <div class="tech-name">UI Framework</div>
+          <div class="tech-desc">Concurrent React</div>
+        </div>
+        <div class="tech-item">
+          <div style="color: var(--cyan); font-size: 1.5rem; font-weight: 700;">Ollama</div>
+          <div class="tech-name">Local LLM</div>
+          <div class="tech-desc">REST Provider</div>
+        </div>
+        <div class="tech-item">
+          <div style="color: #3178c6; font-size: 1.5rem; font-weight: 700;">TS 5.8</div>
+          <div class="tech-name">TypeScript</div>
+          <div class="tech-desc">Strict Typing</div>
+        </div>
+        <div class="tech-item">
+          <div style="color: #a855f7; font-size: 1.5rem; font-weight: 700;">Vite 7</div>
+          <div class="tech-name">Build Tool</div>
+          <div class="tech-desc">Ultra-fast HMR</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="quickstart-section" id="quickstart">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Compilar a Partir do Código Fonte</h2>
+        <p class="section-subtitle">Prefere rodar no modo de desenvolvimento ou compilar você mesmo?</p>
+      </div>
+
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span>bash — setup e desenvolvimento local</span>
+          <span>pnpm tauri dev</span>
+        </div>
+        <div class="terminal-content">
+          <div class="terminal-comment"># 1. Clone o repositório</div>
+          <div class="terminal-cmd">git clone https://github.com/your-username/local-code.git</div>
+          <div class="terminal-cmd">cd local-code</div>
+          <br>
+          <div class="terminal-comment"># 2. Instale as dependências</div>
+          <div class="terminal-cmd">pnpm install</div>
+          <br>
+          <div class="terminal-comment"># 3. Inicie o app em desenvolvimento</div>
+          <div class="terminal-cmd">pnpm tauri dev</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 local-code. Código-fonte sob <a href="https://github.com/your-username/local-code/blob/main/LICENSE" target="_blank" style="color: var(--primary); text-decoration: underline;">Licença MIT</a> | Documentação & Conteúdo sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" target="_blank" style="color: #a5b4fc; text-decoration: underline;">CC BY 4.0</a>.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simulator tab switcher
+    function switchSimTab(mode) {
+      const tabs = document.querySelectorAll('.sim-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const container = document.getElementById('sim-messages-container');
+      if (mode === 'chat') {
+        container.innerHTML = `
+          <div class="msg-bubble msg-user">Como definir comandos customizados no Tauri 2 em Rust?</div>
+          <div class="msg-bubble msg-ai">Aqui está um exemplo limpo de como declarar um comando assíncrono no Tauri 2:
+            <div class="code-block">#[tauri::command]\npub async fn greet(name: String) -> Result&lt;String, String&gt; {\n    Ok(format!("Olá, {}! Executado com sucesso via Rust", name))\n}</div>
+          </div>
+        `;
+      } else if (mode === 'cowork') {
+        container.innerHTML = `
+          <div class="msg-bubble msg-user">Divida as tarefas para construir a indexação local de arquivos.</div>
+          <div class="msg-bubble msg-ai">1. 📂 <strong>Scanner de Diretório</strong>: Varredura recursiva de arquivos em Rust.<br>2. ⚡ <strong>Embeddings Vetoriais</strong>: Gerar chunks de embeddings com Ollama nomic-embed-text local.<br>3. 🔍 <strong>API de Busca</strong>: Expor busca por similaridade de cosseno para a UI.</div>
+        `;
+      } else if (mode === 'code') {
+        container.innerHTML = `
+          <div class="msg-bubble msg-user">Refatore o hook useChats para tratar reconexão de streaming.</div>
+          <div class="msg-bubble msg-ai">Tratamento de reconexão atualizado com backoff exponencial:
+            <div class="code-block">const fetchStream = async () => {\n  const res = await fetch(\`\${ollamaUrl}/api/chat\`,\n    { method: 'POST', body: JSON.stringify(payload) }\n  );\n  // Processar chunks do ReadableStream...\n};</div>
+          </div>
+        `;
+      }
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      const isOpen = content.classList.contains('open');
+      document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+      document.querySelectorAll('.accordion-header span:last-child').forEach(s => s.textContent = '+');
+      if (!isOpen) {
+        content.classList.add('open');
+        header.querySelector('span:last-child').textContent = '−';
+      }
+    }
+
+    // Client OS Detection and dynamic download link configuration
+    (function detectOSAndSetupDownloads() {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const platform = window.navigator.platform?.toLowerCase() || '';
+
+      const isMac = platform.includes('mac') || userAgent.includes('mac');
+      const isWin = platform.includes('win') || userAgent.includes('win');
+      const isLinux = platform.includes('linux') || userAgent.includes('linux');
+
+      const heroBtn = document.getElementById('hero-download-btn');
+      const heroLabel = document.getElementById('hero-download-label');
+      const osInfo = document.getElementById('detected-os-info');
+
+      if (isMac) {
+        document.getElementById('card-macos')?.classList.add('highlight');
+        document.getElementById('badge-macos')?.style.setProperty('display', 'block');
+        heroLabel.textContent = 'Baixar para macOS (.dmg)';
+        heroBtn.href = '#card-macos';
+        osInfo.innerHTML = 'Sistema detectado: <strong>macOS</strong> (Apple Silicon & Intel)';
+      } else if (isWin) {
+        document.getElementById('card-windows')?.classList.add('highlight');
+        document.getElementById('badge-windows')?.style.setProperty('display', 'block');
+        heroLabel.textContent = 'Baixar para Windows (.exe)';
+        heroBtn.href = '#card-windows';
+        osInfo.innerHTML = 'Sistema detectado: <strong>Windows (64-bit)</strong>';
+      } else if (isLinux) {
+        document.getElementById('card-linux')?.classList.add('highlight');
+        document.getElementById('badge-linux')?.style.setProperty('display', 'block');
+        heroLabel.textContent = 'Baixar para Linux (.AppImage)';
+        heroBtn.href = '#card-linux';
+        osInfo.innerHTML = 'Sistema detectado: <strong>Linux (64-bit)</strong>';
+      }
+
+      // Configure direct GitHub Release URLs if repository is configured
+      const repoUrl = 'https://github.com/your-username/local-code';
+      const releaseBase = `${repoUrl}/releases/latest/download`;
+
+      // Update download buttons with predictable latest release asset names
+      const dlMacArm = document.getElementById('dl-mac-arm');
+      const dlMacIntel = document.getElementById('dl-mac-intel');
+      const dlWinExe = document.getElementById('dl-win-exe');
+      const dlWinMsi = document.getElementById('dl-win-msi');
+      const dlLinuxAppImage = document.getElementById('dl-linux-appimage');
+      const dlLinuxDeb = document.getElementById('dl-linux-deb');
+
+      if (dlMacArm) dlMacArm.href = `${releaseBase}/local-code_aarch64.dmg`;
+      if (dlMacIntel) dlMacIntel.href = `${releaseBase}/local-code_x64.dmg`;
+      if (dlWinExe) dlWinExe.href = `${releaseBase}/local-code_x64-setup.exe`;
+      if (dlWinMsi) dlWinMsi.href = `${releaseBase}/local-code_x64_en-US.msi`;
+      if (dlLinuxAppImage) dlLinuxAppImage.href = `${releaseBase}/local-code_amd64.AppImage`;
+      if (dlLinuxDeb) dlLinuxDeb.href = `${releaseBase}/local-code_amd64.deb`;
+    })();
+  </script>
+</body>
+</html>

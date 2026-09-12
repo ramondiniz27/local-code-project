@@ -32,16 +32,27 @@ export async function streamChat(
 
   try {
     await new Promise<void>((resolve, reject) => {
+      // 45-second safety timeout to prevent infinite hanging
+      const timer = setTimeout(() => {
+        resolve();
+      }, 45000);
+
       Promise.all([
         listen<string>("ollama-chunk", (event) => onChunk(event.payload)),
-        listen<void>("ollama-done", () => resolve()),
+        listen<void>("ollama-done", () => {
+          clearTimeout(timer);
+          resolve();
+        }),
       ])
         .then(([chunkFn, doneFn]) => {
           unlistenChunk = chunkFn;
           unlistenDone = doneFn;
           return invoke("ollama_chat", { messages });
         })
-        .catch(reject);
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
     });
   } finally {
     unlistenChunk?.();

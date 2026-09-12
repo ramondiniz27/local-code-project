@@ -15,12 +15,18 @@ export function ModelDropdown({ models, selectedModel, onSelect }: ModelDropdown
   return (
     <DropdownMenuContent
       align="start"
-      className="w-[260px] flex-col gap-0.5 rounded-[10px] border border-border-light bg-bg-input p-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
+      className="w-[280px] flex-col gap-0.5 rounded-[10px] border border-border-light bg-bg-input p-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
     >
       {models.length === 0 && (
-        <p className="px-3 py-2.5 text-[13px] text-text-muted">
-          Nenhum modelo encontrado no Ollama
-        </p>
+        <div className="flex flex-col gap-1.5 p-3 text-xs text-text-muted">
+          <div className="flex items-center gap-2 font-medium text-amber-500">
+            <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
+            <span>Nenhum modelo disponível</span>
+          </div>
+          <p className="text-[11px] leading-relaxed text-text-muted">
+            Não foram encontrados modelos ativos no Ollama. Tentando conectar à API periodicamente...
+          </p>
+        </div>
       )}
       {models.map((model) => {
         const selected = model.name === selectedModel;

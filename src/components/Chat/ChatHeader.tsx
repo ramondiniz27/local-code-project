@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Settings, Share } from "lucide-react";
+import { ChevronDown, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ModelDropdown } from "./ModelDropdown";
@@ -43,7 +43,6 @@ export function ChatHeader({
         />
       </DropdownMenu>
       <div className="flex items-center gap-2">
-        <Share className="h-5 w-5 text-text-secondary" />
         <button type="button" onClick={() => setSettingsOpen(true)}>
           <Settings className="h-5 w-5 text-text-secondary" />
         </button>

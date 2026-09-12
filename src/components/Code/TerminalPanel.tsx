@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Terminal as TerminalIcon, Plus, X, Loader2, Play } from "lucide-react";
-import { runScript } from "../../lib/filesystem";
+import { Terminal as TerminalIcon, Plus, X, Loader2, Play, SquareTerminal } from "lucide-react";
+import { runScript, openSystemTerminal } from "../../lib/filesystem";
 import { useCodeStore } from "../../store/codeStore";
 import { useFilesystemStore } from "../../store/filesystemStore";
 
@@ -127,15 +127,25 @@ export function TerminalPanel({ onClose }: TerminalPanelProps) {
           <span className="text-[11px] font-bold uppercase tracking-wider text-[#9ca3af]">
             Terminal · {projectName !== "—" ? projectName : "localcode CLI"}
           </span>
-          <span className="text-[10px] text-[#6b7280] truncate max-w-[200px]">
+          <span className="text-[10px] text-[#6b7280] truncate max-w-[180px]">
             ({activeDir})
           </span>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openSystemTerminal(activeDir)}
+            className="flex items-center gap-1 text-[11px] text-[#60a5fa] hover:text-[#93c5fd] transition-colors cursor-pointer rounded px-2 py-0.5 bg-[#60a5fa]/10 hover:bg-[#60a5fa]/20 font-sans font-medium"
+            title="Abrir janela do Terminal do Sistema nesta pasta"
+          >
+            <SquareTerminal className="h-3 w-3" />
+            <span>Terminal do Sistema</span>
+          </button>
+
           <button
             type="button"
             onClick={handleClearTerminal}
-            className="text-[#9ca3af] hover:text-white transition-colors cursor-pointer"
+            className="text-[#9ca3af] hover:text-white transition-colors cursor-pointer p-1"
             title="Limpar Terminal"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -144,7 +154,7 @@ export function TerminalPanel({ onClose }: TerminalPanelProps) {
             <button
               type="button"
               onClick={onClose}
-              className="text-[#9ca3af] hover:text-white transition-colors cursor-pointer"
+              className="text-[#9ca3af] hover:text-white transition-colors cursor-pointer p-1"
               title="Fechar Terminal"
             >
               <X className="h-3.5 w-3.5" />

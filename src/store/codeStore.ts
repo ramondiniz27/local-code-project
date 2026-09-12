@@ -5,6 +5,7 @@ import {
   readFile,
   writeFile,
   selectDirectory,
+  runScript,
   type DirEntry,
 } from "../lib/filesystem";
 import { useFilesystemStore } from "./filesystemStore";
@@ -35,7 +36,8 @@ export interface ChangedFileItem {
 interface CodeState {
   projectPath: string | null;
   projectName: string;
-  branchName: string;
+  isGitRepo: boolean;
+  branchName: string | null;
   fileTree: DirEntry[];
   openTabs: CodeTab[];
   activeTabPath: string | null;
@@ -55,6 +57,9 @@ interface CodeState {
   attachContextChip: (path: string) => Promise<void>;
   removeContextChip: (id: string) => void;
   setViewMode: (mode: "arquivo" | "diff") => void;
+  fetchGitInfo: () => Promise<void>;
+  getLocalBranches: () => Promise<string[]>;
+  checkoutBranch: (branch: string) => Promise<boolean>;
 }
 
 function getBasename(pathStr: string): string {
@@ -67,7 +72,8 @@ export const useCodeStore = create<CodeState>()(
     (set, get) => ({
       projectPath: null,
       projectName: "—",
-      branchName: "main",
+      isGitRepo: false,
+      branchName: null,
       fileTree: [],
       openTabs: [],
       activeTabPath: null,
@@ -105,6 +111,7 @@ export const useCodeStore = create<CodeState>()(
         } catch {
           set({ fileTree: [] });
         }
+        await get().fetchGitInfo();
       },
 
       refreshTree: async () => {
@@ -249,6 +256,61 @@ export const useCodeStore = create<CodeState>()(
       },
 
       setViewMode: (mode: "arquivo" | "diff") => set({ viewMode: mode }),
+
+      fetchGitInfo: async () => {
+        const { projectPath } = get();
+        if (!projectPath) return;
+
+        try {
+          const checkRepo = await runScript("git rev-parse --is-inside-work-tree", projectPath);
+          if (checkRepo.exitCode !== 0) {
+            set({ isGitRepo: false, branchName: null });
+            return;
+          }
+
+          const branchRes = await runScript("git branch --show-current", projectPath);
+          const currentBranch = branchRes.exitCode === 0 ? branchRes.stdout.trim() : null;
+          set({ isGitRepo: true, branchName: currentBranch || null });
+        } catch (err) {
+          console.error("Error fetching git info:", err);
+          set({ isGitRepo: false, branchName: null });
+        }
+      },
+
+      getLocalBranches: async () => {
+        const { projectPath, isGitRepo } = get();
+        if (!projectPath || !isGitRepo) return [];
+
+        try {
+          const res = await runScript("git branch --format='%(refname:short)'", projectPath);
+          if (res.exitCode === 0) {
+            return res.stdout
+              .split("\\n")
+              .map((b) => b.trim())
+              .filter((b) => b.length > 0);
+          }
+        } catch (err) {
+          console.error("Error fetching local branches:", err);
+        }
+        return [];
+      },
+
+      checkoutBranch: async (branch: string) => {
+        const { projectPath, isGitRepo, fetchGitInfo } = get();
+        if (!projectPath || !isGitRepo) return false;
+
+        try {
+          const res = await runScript(`git checkout ${branch}`, projectPath);
+          if (res.exitCode === 0) {
+            await fetchGitInfo();
+            await get().refreshTree();
+            return true;
+          }
+        } catch (err) {
+          console.error("Error checking out branch:", err);
+        }
+        return false;
+      },
     }),
     { name: "oc.code-store" },
   ),

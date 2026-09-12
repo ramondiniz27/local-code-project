@@ -28,3 +28,11 @@ dist-ssr
 .claude/
 .cursor/
 .windsurf/plans/*.md
+.kiro/
+.specs/
+.vscode/
+.devin/
+GLOBAL_SKILLS.md
+PROJECT_CONTEXT.md
+.cursor/
+

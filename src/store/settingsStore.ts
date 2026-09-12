@@ -2,10 +2,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { OllamaModel } from "../lib/ollama";
 
-const LEGACY_URL_KEY = "ollamaUrl";
+const URL_KEY = "ollamaUrl";
+export const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 
 interface SettingsState {
-  ollamaUrl: string | null;
+  ollamaUrl: string;
   lastKnownModels: OllamaModel[];
   modelPreferences: Record<string, boolean>;
   setOllamaUrl: (url: string) => void;
@@ -16,10 +17,14 @@ interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      ollamaUrl: localStorage.getItem(LEGACY_URL_KEY),
+      ollamaUrl: localStorage.getItem(URL_KEY) || DEFAULT_OLLAMA_URL,
       lastKnownModels: [],
       modelPreferences: {},
-      setOllamaUrl: (url) => set({ ollamaUrl: url }),
+      setOllamaUrl: (url) => {
+        const trimmed = url.trim() || DEFAULT_OLLAMA_URL;
+        localStorage.setItem(URL_KEY, trimmed);
+        set({ ollamaUrl: trimmed });
+      },
       setLastKnownModels: (models) => set({ lastKnownModels: models }),
       setModelEnabled: (name, enabled) =>
         set((state) => ({

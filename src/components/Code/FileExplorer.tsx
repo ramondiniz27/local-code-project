@@ -7,6 +7,7 @@ import {
   Plus,
   RefreshCw,
   FolderInput,
+  FolderMinus,
 } from "lucide-react";
 import { useCodeStore } from "../../store/codeStore";
 import type { DirEntry } from "../../lib/filesystem";
@@ -36,6 +37,10 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
     setExpandedFolders((prev) => ({ ...prev, [path]: !prev[path] }));
   };
 
+  const handleCollapseAll = () => {
+    setExpandedFolders({});
+  };
+
   const handleFileClick = (entry: DirEntry) => {
     if (entry.kind === "directory") {
       toggleFolder(entry.path);
@@ -54,9 +59,9 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
   };
 
   return (
-    <aside className="flex h-full w-[240px] flex-col border-r border-[#2d2d48] bg-[#20203a] p-3 shrink-0 overflow-y-auto text-xs select-none">
+    <aside className="flex h-full w-[240px] flex-col border-r border-[#2d2d48] bg-[#20203a] p-3 shrink-0 overflow-hidden text-xs select-none">
       {/* Top Header & Toolbar */}
-      <div className="mb-2 flex items-center justify-between px-1">
+      <div className="mb-2 flex items-center justify-between px-1 shrink-0">
         <span className="text-[11px] font-bold uppercase tracking-wider text-[#9ca3af]">
           Explorador
         </span>
@@ -70,6 +75,15 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
               title="Novo Arquivo"
             >
               <Plus className="h-3.5 w-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCollapseAll}
+              className="p-1 hover:text-white transition-colors cursor-pointer rounded hover:bg-[#2c2c48]"
+              title="Recolher Todas as Pastas"
+            >
+              <FolderMinus className="h-3.5 w-3.5" />
             </button>
 
             <button
@@ -95,7 +109,7 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
 
       {/* New File Inline Input */}
       {isCreatingFile && (
-        <div className="mb-2 px-1">
+        <div className="mb-2 px-1 shrink-0">
           <input
             type="text"
             value={newFileName}
@@ -112,7 +126,7 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
       )}
 
       {/* File Tree List */}
-      <div className="flex flex-col gap-0.5 min-h-[120px]">
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-0.5 mb-2 pr-0.5">
         {!projectPath ? (
           <div className="flex flex-col gap-2 px-1 py-4 text-center">
             <p className="text-[11px] italic text-[#6b7280]">
@@ -131,8 +145,19 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
             Diretório vazio
           </p>
         ) : (
-          fileTree.map((entry) => {
-            const isActive = activeTabPath === entry.path;
+          fileTree
+            .filter((entry) => {
+              const parts = entry.path.split("/");
+              if (parts.length === 1) return true;
+              let currentPath = "";
+              for (let i = 0; i < parts.length - 1; i++) {
+                currentPath = currentPath ? `${currentPath}/${parts[i]}` : parts[i];
+                if (!expandedFolders[currentPath]) return false;
+              }
+              return true;
+            })
+            .map((entry) => {
+              const isActive = activeTabPath === entry.path;
             const isOpenTab = openTabs.some((t) => t.path === entry.path);
             const indentLevel = (entry.path.match(/\//g) || []).length;
             const isDir = entry.kind === "directory";
@@ -170,14 +195,14 @@ export function FileExplorer({ onSelectFile }: FileExplorerProps) {
       </div>
 
       {/* Divider */}
-      <div className="my-3 border-b border-[#2d2d48]" />
+      <div className="my-2 border-b border-[#2d2d48] shrink-0" />
 
       {/* Changed Files Section */}
-      <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-[#9ca3af]">
+      <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-[#9ca3af] shrink-0">
         Alterações · {changedFiles.length}
       </div>
 
-      <div className="flex flex-col gap-0.5">
+      <div className="max-h-[160px] overflow-y-auto flex flex-col gap-0.5 shrink-0 pr-0.5">
         {changedFiles.length === 0 ? (
           <p className="px-1 py-1 text-[11px] italic text-[#6b7280]">
             Sem alterações

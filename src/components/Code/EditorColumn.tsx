@@ -1,12 +1,14 @@
-import { useEffect } from "react";
-import { FileCode, GitCompare, File as FileIcon, X, Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FileCode, GitCompare, File as FileIcon, X, Save, Terminal as TerminalIcon } from "lucide-react";
 import { CodeDiffView, type DiffLine } from "./CodeDiffView";
 import { SuggestionCard } from "./SuggestionCard";
 import { TerminalPanel } from "./TerminalPanel";
 import { CodeEmptyState } from "./CodeEmptyState";
+import { ReadmePreview } from "./ReadmePreview";
 import { useCodeStore } from "../../store/codeStore";
 
 export function EditorColumn() {
+  const [isTerminalOpen, setIsTerminalOpen] = useState(true);
   const {
     openTabs,
     activeTabPath,
@@ -37,9 +39,14 @@ export function EditorColumn() {
   }, [activeTabPath, saveTab]);
 
   if (!hasTabs) {
+    const { projectPath } = useCodeStore();
     return (
       <div className="flex h-full flex-1 flex-col bg-[#181828] overflow-hidden min-w-0">
-        <CodeEmptyState onOpenProject={() => openProject()} />
+        {projectPath ? (
+          <ReadmePreview />
+        ) : (
+          <CodeEmptyState onOpenProject={() => openProject()} />
+        )}
       </div>
     );
   }
@@ -249,7 +256,20 @@ export function EditorColumn() {
       </div>
 
       {/* Terminal Panel */}
-      <TerminalPanel />
+      {isTerminalOpen ? (
+        <TerminalPanel onClose={() => setIsTerminalOpen(false)} />
+      ) : (
+        <div className="flex h-8 w-full items-center justify-between border-t border-[#2d2d48] bg-[#14142a] px-3.5 shrink-0 select-none">
+          <button
+            type="button"
+            onClick={() => setIsTerminalOpen(true)}
+            className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#9ca3af] hover:text-white transition-colors cursor-pointer"
+          >
+            <TerminalIcon className="h-3.5 w-3.5 text-[#60a5fa]" />
+            <span>Terminal (Minimizado)</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

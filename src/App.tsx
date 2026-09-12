@@ -65,7 +65,6 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
         activeTab={activeTab}
         onSelectTab={handleSelectTab}
       />
-
       {activeTab === "chat" && (
         <MainChatArea
           messages={messages}
@@ -77,9 +76,7 @@ function Connected({ ollamaUrl }: { ollamaUrl: string }) {
           onSend={sendMessage}
         />
       )}
-
       {activeTab === "cowork" && <CoworkArea />}
-
       {activeTab === "code" && <CodeArea />}
     </div>
   );

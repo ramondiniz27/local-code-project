@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { testConnection, listModels, type OllamaModel } from "../../lib/ollama";
 import { useSettingsStore } from "../../store/settingsStore";
 
@@ -37,7 +36,7 @@ function mergeModels(
 export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] flex flex-col overflow-hidden">
         {open && <SettingsForm onOpenChange={onOpenChange} />}
       </DialogContent>
     </Dialog>
@@ -195,24 +194,26 @@ function SettingsForm({
             Nenhum modelo encontrado no Ollama
           </p>
         ) : (
-          <ScrollArea className="max-h-[240px]">
-            <div className="flex flex-col gap-1 pr-3">
-              {draftModels.map((model) => (
-                <div
-                  key={model.name}
-                  className="flex items-center justify-between gap-2 rounded-lg px-2 py-2"
+          <div className="flex flex-col gap-1 max-h-48 sm:max-h-56 overflow-y-auto pr-1 rounded-lg border border-border-light/60 bg-muted/20 p-1">
+            {draftModels.map((model) => (
+              <div
+                key={model.name}
+                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-background/80 transition-colors"
+              >
+                <span
+                  className="min-w-0 flex-1 truncate text-[13px] text-text-primary font-medium"
+                  title={model.name}
                 >
-                  <span className="min-w-0 flex-1 truncate text-[13px] text-text-primary">
-                    {model.name}
-                  </span>
-                  <Switch
-                    checked={model.enabled}
-                    onCheckedChange={() => toggleModel(model.name)}
-                  />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+                  {model.name}
+                </span>
+                <Switch
+                  checked={model.enabled}
+                  onCheckedChange={() => toggleModel(model.name)}
+                  className="shrink-0"
+                />
+              </div>
+            ))}
+          </div>
         )}
       </div>
 

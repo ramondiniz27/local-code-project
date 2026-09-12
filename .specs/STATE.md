@@ -18,13 +18,31 @@
 - **Date**: 2026-07-19
 - **Status**: active
 
+### AD-003
+- **Decision**: Adopt a Dual-Licensing structure: Source Code is licensed under MIT, while Documentation, Specifications (`.specs/`), Guides, Assets, and Landing Page (`docs/`) are licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+- **Reason**: Creative Commons officially recommends against CC licenses for software source code (lack of patent terms, object/source distinction). MIT is ideal for TypeScript/Rust software code, while CC BY 4.0 provides a clear, globally-recognized attribution license for technical documentation, design assets, and landing page content.
+- **Trade-off**: Requires maintaining explicit dual-license notices in `LICENSE`, `README.md`, `CONTRIBUTING.md`, and `docs/index.html`.
+- **Scope**: All existing and future code, assets, documentation, and specs in the project.
+- **Date**: 2026-08-26
+### AD-004
+- **Decision**: Multi-Platform binary distribution utilizes GitHub Actions CI/CD matrix compiling native bundles (.dmg for macOS ARM64/x64, .msi/.exe for Windows x64, .AppImage/.deb for Linux x64) uploaded directly to GitHub Releases. The GitHub Pages website (`docs/index.html`) serves as an OS-aware download hub with client-side platform detection and direct download links.
+- **Reason**: GitHub Pages enforces strict limits (100MB per file, 1GB total repo size). Storing multi-platform binary bundles in Git history is an anti-pattern. GitHub Releases provides free unlimited CDN bandwidth for asset delivery, while GitHub Pages provides an optimal UI/UX for end users.
+- **Trade-off**: Requires maintainers to tag releases with `v*` to trigger automated builds, and end users on macOS/Windows without paid certificates must follow simple unnotarized app guidance.
+- **Scope**: All release workflows, automated distribution, and GitHub Pages download portals for local-code.
+- **Date**: 2026-08-26
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: Histórico Real de Chats + shadcn/ui — `.specs/features/chat-history/`
-- **Phase / Task**: Execute — complete. All 15 tasks (T1–T15) implemented, committed, and verified.
-- **Completed**: T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15 + 3 post-Verifier fix commits (dead mockData export, setSelectedModel persistence, shadcn CSS-var remap gap)
+- **Feature**: Multi-Platform Executable Build & GitHub Pages Distribution — `.specs/features/multiplatform-release-distribution/`
+- **Phase / Task**: All Phases (Phase 1, 2, 3) — Completed and Verified.
+- **Completed**:
+  - `.github/workflows/release.yml` (multi-platform matrix build for macOS ARM64/Intel, Windows x64, Linux x64 with pnpm & Rust)
+  - `.github/workflows/pages.yml` (automated GitHub Pages continuous deployment for `docs/`)
+  - `docs/index.html` (OS detection, `#downloads` hub with platform cards, direct release asset links, and first-time installation guide)
+  - `README.md` (platform download badges, download matrix table, and automated release guide)
+  - Validation report (`.specs/features/multiplatform-release-distribution/validation.md`) with PASS verdict.
 - **In-progress**: none
-- **Next step**: User-facing manual QA in the running app (browser automation tooling was unavailable this session — no live click-through was performed). Suggested checks: multi-chat create/switch/reload flow, streaming-lock on sidebar/new-chat, empty-state copy, visual pass on shadcn components (button/dropdown/scrollbar/avatar) against the dark sidebar / light main area.
+- **Next step**: User can push code and tag a release (e.g. `git tag v0.1.0 && git push origin v0.1.0`) to trigger the multi-platform build workflow on GitHub Actions.
 - **Blockers**: none
-- **Uncommitted files**: none (only `.specs/` tracking files were touched by the Verifier and this handoff write)
 - **Branch**: master

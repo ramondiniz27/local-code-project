@@ -14,8 +14,33 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
   const { models, selectedModel, setSelectedModel, isConnected, error } = useModels(5000);
   const ollamaUrl = useSettingsStore((s) => s.ollamaUrl);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
+  const [localBranches, setLocalBranches] = useState<string[]>([]);
 
-  const { projectName, branchName, changedFiles, openProject } = useCodeStore();
+  const {
+    projectName,
+    isGitRepo,
+    branchName,
+    changedFiles,
+    openProject,
+    getLocalBranches,
+    checkoutBranch,
+  } = useCodeStore();
+
+  const handleBranchClick = async () => {
+    setIsBranchDropdownOpen(!isBranchDropdownOpen);
+    if (!isBranchDropdownOpen) {
+      const branches = await getLocalBranches();
+      setLocalBranches(branches);
+    }
+  };
+
+  const handleBranchSelect = async (branch: string) => {
+    setIsBranchDropdownOpen(false);
+    if (branch !== branchName) {
+      await checkoutBranch(branch);
+    }
+  };
 
   // Show a toast when Ollama is unreachable
   useOllamaErrorToast(models.length === 0 ? error : null, ollamaUrl);
@@ -43,10 +68,47 @@ export function CodeHeader({ onCommit, onSelectModel }: CodeHeaderProps) {
         </button>
 
         {/* Branch Chip */}
-        <div className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#9ca3af] border border-[#2d2d48]">
-          <GitBranch className="h-3.5 w-3.5 text-[#9ca3af]" />
-          <span className="font-mono">{branchName}</span>
-        </div>
+        {isGitRepo && branchName && (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={handleBranchClick}
+              className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#9ca3af] border border-[#2d2d48] hover:bg-[#343452] transition-colors cursor-pointer"
+            >
+              <GitBranch className="h-3.5 w-3.5 text-[#9ca3af]" />
+              <span className="font-mono">{branchName}</span>
+            </button>
+
+            {isBranchDropdownOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsBranchDropdownOpen(false)}
+                />
+                <div className="absolute left-0 top-full mt-1 z-50 w-48 rounded-md border border-[#374151] bg-[#20203a] p-1.5 shadow-lg max-h-64 overflow-y-auto">
+                  {localBranches.length === 0 ? (
+                    <div className="p-2 text-xs text-[#8c8ca8]">Carregando branches...</div>
+                  ) : (
+                    localBranches.map((b) => (
+                      <button
+                        key={b}
+                        type="button"
+                        onClick={() => handleBranchSelect(b)}
+                        className={`flex w-full items-center justify-between rounded-sm px-3 py-1.5 text-left text-xs font-mono ${
+                          b === branchName
+                            ? "bg-[#3b82f6] text-white font-medium"
+                            : "text-[#d4d4e0] hover:bg-[#2c2c48]"
+                        }`}
+                      >
+                        <span className="truncate">{b}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Diff Stat */}
         {changedFiles.length > 0 && (
