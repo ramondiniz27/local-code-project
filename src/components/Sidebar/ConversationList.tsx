@@ -49,20 +49,18 @@ export function ConversationList({
                 {formatRelativeTime(chat.updatedAt)}
               </span>
             </div>
-            {onDelete && (
-              <button
-                type="button"
-                disabled={disabled}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(chat.id);
-                }}
-                title="Excluir conversa"
-                className="opacity-50 hover:opacity-100 p-1 text-text-muted hover:text-rose-400 hover:bg-rose-500/10 rounded transition-all shrink-0 cursor-pointer"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            )}
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.(chat.id);
+              }}
+              title="Excluir conversa"
+              className="p-1.5 text-rose-500 bg-rose-500/10 hover:bg-rose-500/20 rounded shrink-0 cursor-pointer z-50"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
           </div>
         );
       })}
