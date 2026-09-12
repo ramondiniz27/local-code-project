@@ -4,8 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { useCoworkStore } from "@/store/coworkStore";
 import { CoworkModelDropdown } from "./CoworkModelDropdown";
 import { invoke } from "@tauri-apps/api/core";
+import { useSettingsStore } from "@/store/settingsStore";
 
 export function CoworkHeaderPen() {
+  const setIsSettingsOpen = useSettingsStore((s) => s.setIsSettingsOpen);
   const {
     sessionTitle,
     sessionStatus,
@@ -219,7 +221,7 @@ export function CoworkHeaderPen() {
           )}
         </Button>
 
-        <Button variant="ghost" size="icon-sm" className="h-8 w-8 text-text-secondary hover:text-text-primary cursor-pointer">
+        <Button onClick={() => setIsSettingsOpen(true)} variant="ghost" size="icon-sm" className="h-8 w-8 text-text-secondary hover:text-text-primary cursor-pointer">
           <Settings className="h-4 w-4" />
         </Button>
       </div>

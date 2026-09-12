@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { useSettingsStore } from "../../store/settingsStore";
+import { useSettingsStore } from "../store/settingsStore";
 
 /**
  * Displays a single error toast when the Ollama server is unreachable.
