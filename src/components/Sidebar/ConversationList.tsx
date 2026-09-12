@@ -57,9 +57,9 @@ export function ConversationList({
                 onDelete?.(chat.id);
               }}
               title="Excluir conversa"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef4444', color: 'white', padding: '6px', borderRadius: '4px', flexShrink: 0, zIndex: 50 }}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted hover:bg-rose-500/10 hover:text-rose-500 transition-colors shrink-0"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4 w-4 shrink-0" />
             </button>
           </div>
         );
