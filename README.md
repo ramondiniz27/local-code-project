@@ -6,9 +6,9 @@
 [![React 19](https://img.shields.io/badge/React-19.1-61dafb.svg?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript 5.8](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-black.svg?style=flat-square&logo=ollama)](https://ollama.com)
-[![macOS Download](https://img.shields.io/badge/macOS-Apple_Silicon_%7C_Intel-black.svg?style=flat-square&logo=apple)](https://github.com/your-username/local-code/releases/latest)
-[![Windows Download](https://img.shields.io/badge/Windows-EXE_%7C_MSI-blue.svg?style=flat-square&logo=windows)](https://github.com/your-username/local-code/releases/latest)
-[![Linux Download](https://img.shields.io/badge/Linux-AppImage_%7C_deb-orange.svg?style=flat-square&logo=linux)](https://github.com/your-username/local-code/releases/latest)
+[![macOS Download](https://img.shields.io/badge/macOS-Apple_Silicon_%7C_Intel-black.svg?style=flat-square&logo=apple)](https://github.com/ramondiniz27/local-code-project/releases/latest)
+[![Windows Download](https://img.shields.io/badge/Windows-EXE_%7C_MSI-blue.svg?style=flat-square&logo=windows)](https://github.com/ramondiniz27/local-code-project/releases/latest)
+[![Linux Download](https://img.shields.io/badge/Linux-AppImage_%7C_deb-orange.svg?style=flat-square&logo=linux)](https://github.com/ramondiniz27/local-code-project/releases/latest)
 [![Licença Código: MIT](https://img.shields.io/badge/Código-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Licença Docs: CC BY 4.0](https://img.shields.io/badge/Docs-CC_BY_4.0-lightgrey.svg?style=flat-square&logo=creativecommons)](LICENSE)
 
@@ -16,7 +16,7 @@
 
 ## 📥 Download dos Executáveis Oficiais
 
-Você pode baixar os instaladores e executáveis pré-compilados diretamente da nossa **[Central de Downloads na GitHub Pages](https://your-username.github.io/local-code/#downloads)** ou pela aba de **[Releases no GitHub](https://github.com/your-username/local-code/releases/latest)**:
+Você pode baixar os instaladores e executáveis pré-compilados diretamente da nossa **[Central de Downloads na GitHub Pages](https://ramondiniz27.github.io/local-code-project/#downloads)** ou pela aba de **[Releases no GitHub](https://github.com/ramondiniz27/local-code-project/releases/latest)**:
 
 | Plataforma | Arquitetura | Formatos Disponíveis |
 | :--- | :--- | :--- |
@@ -32,7 +32,7 @@ O **`local-code`** é um aplicativo desktop de alta performance desenvolvido par
 
 Conectando-se diretamente à sua instância local do [Ollama](https://ollama.com), o `local-code` oferece acesso instantâneo a modelos open-source como `llama3.3`, `deepseek-r1`, `qwen2.5-coder`, `mistral` e muitos outros distribuídos em três modos especializados.
 
-🌐 **Website / Demonstração:** [Acesse a Landing Page do GitHub Pages](https://pages.github.com) *(Veja em `docs/index.html`)*
+🌐 **Website / Demonstração:** [Acesse a Landing Page do GitHub Pages](https://ramondiniz27.github.io/local-code-project/) *(Veja em `docs/index.html`)*
 
 ---
 
